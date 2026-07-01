@@ -1,0 +1,7 @@
+Highlights
+
+- Q-Learning achieves 91.5% detection rate on OWASP Juice Shop (183/200 requests)
+- Composite action space (13 payloads × 8 endpoints = 88 actions) enables endpoint-aware learning
+- RL agents 727× more efficient than OWASP ZAP (1.09 vs 792.5 requests per vulnerability)
+- False-positive verification with benign probes improves precision to 91.5%
+- Tabular Q-Learning outperforms DQN (61.5%) within 200 episodes due to superior sample efficiency

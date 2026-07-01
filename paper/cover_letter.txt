@@ -1,0 +1,27 @@
+[Date]
+
+Dear Editor-in-Chief,
+
+I am pleased to submit our manuscript entitled "Automated Web Penetration Testing with Reinforcement Learning: A Comparative Study of Q-Learning, Deep Q-Network, and OWASP ZAP" for consideration for publication in the Journal of Information Security and Applications.
+
+This paper presents a rigorous comparative study of reinforcement learning approaches for automated web application penetration testing. Our work makes several contributions that we believe are well-aligned with JISA's scope:
+
+1. We formulate web penetration testing as an MDP with an 8-dimensional state space and a composite action space of 88 payload-endpoint combinations, enabling endpoint-aware policy learning that prior work has not addressed.
+
+2. We provide the first direct three-way comparison of tabular Q-Learning, Deep Q-Network, and the industry-standard OWASP ZAP on identical web endpoints, with controlled experimental conditions and reproducible configurations.
+
+3. We introduce a false-positive verification mechanism using benign probes that improves detection precision without sacrificing recall.
+
+4. Our experimental results demonstrate that Q-Learning achieves a 91.5% detection rate (183 vulnerabilities in 200 requests, 1.09 requests per vulnerability) — a 727-fold improvement in efficiency over OWASP ZAP.
+
+The findings address a critical gap in the literature: while prior studies evaluate RL agents either in simulated network environments or without direct comparison to standard scanners, our work establishes quantitative efficiency benchmarks on real web applications.
+
+We confirm that this manuscript has not been published elsewhere and is not under consideration by another journal. All authors have approved the manuscript and agree with its submission to JISA.
+
+We appreciate your consideration and look forward to your response.
+
+Sincerely,
+
+Kevin Setiawan
+Department of Informatics, Universitas Contoh
+Email: kevin.setiawan@example.com

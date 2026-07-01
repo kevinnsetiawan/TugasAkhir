@@ -1,0 +1,12 @@
+.venv/
+juice-shop/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+*.err
