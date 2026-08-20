@@ -1,0 +1,60 @@
+\chapter{Pendahuluan}
+
+\section{Latar Belakang}
+
+Perkembangan aplikasi berbasis web yang masif telah meningkatkan eksposur terhadap ancaman keamanan siber, menjadikan identifikasi kerentanan sebagai kebutuhan krusial dalam menjaga integritas sistem. Penetration testing merupakan pendekatan yang umum digunakan untuk mengevaluasi keamanan melalui simulasi serangan nyata. Namun, pendekatan konvensional terutama yang bersifat manual atau berbasis aturan statis masih menghadapi keterbatasan signifikan, seperti rendahnya efisiensi, tingginya ketergantungan pada keahlian spesialis, serta ketidakmampuan beradaptasi terhadap dinamika sistem yang kompleks dan terus berubah (\cite{zhang2023,kumar2024}).
+
+Seiring dengan perkembangan machine learning, pendekatan berbasis pembelajaran adaptif mulai diadopsi untuk meningkatkan otomatisasi dalam penetration testing. Di antara berbagai metode, Reinforcement Learning (RL) menawarkan keunggulan dalam pengambilan keputusan berbasis pengalaman melalui interaksi langsung dengan lingkungan. RL memungkinkan agen untuk secara iteratif mengevaluasi dan mengoptimalkan strategi serangan berdasarkan umpan balik (reward), sehingga mampu mengeksplorasi ruang serangan secara lebih efektif dibandingkan dengan pendekatan deterministik (\cite{alavizadeh2024,nguyen2023}). Selain itu, penelitian terbaru menunjukkan bahwa pendekatan berbasis AI agent dan autonomous security systems memiliki potensi besar dalam meningkatkan efisiensi pengujian keamanan secara otomatis (\cite{li2025,chen2025}). Meskipun demikian, sebagian besar penelitian sebelumnya masih terbatas pada simulasi atau skenario umum, sehingga implementasi yang terukur pada aplikasi web nyata masih memerlukan eksplorasi lebih lanjut.
+
+Berdasarkan kesenjangan tersebut, penelitian ini mengusulkan integrasi Reinforcement Learning sebagai mekanisme adaptive decision-making dalam automated web penetration testing. Studi ini menggunakan OWASP Juice Shop sebagai lingkungan pengujian untuk mengevaluasi kemampuan agen dalam mengidentifikasi kerentanan secara efisien dan adaptif. Dengan pendekatan ini, penelitian diharapkan dapat memberikan kontribusi dalam meningkatkan efektivitas strategi pengujian penetrasi dibandingkan dengan metode konvensional yang bersifat statis serta memberikan pendekatan yang lebih adaptif dalam menghadapi dinamika ancaman keamanan modern (\cite{singh2024}).
+
+\section{Rumusan Masalah}
+\begin{enumerate}
+    \item Bagaimana merancang pendekatan \textit{Reinforcement Learning} dalam \textit{automated web penetration testing} untuk mengatasi keterbatasan metode pengujian konvensional yang masih bersifat statis, kurang adaptif, dan belum mempertimbangkan respons aplikasi web dalam pemilihan strategi pengujian kerentanan?
+    
+    \item Bagaimana merancang, mengimplementasikan, dan mengevaluasi metode \textit{Reinforcement Learning} dengan pendekatan Q-Learning dalam \textit{automated web penetration testing}, termasuk penentuan komponen \textit{state}, \textit{action}, \textit{reward}, pengaturan \textit{hyperparameter}, serta pengukuran kinerja berdasarkan waktu pengujian, jumlah \textit{request}, tingkat keberhasilan identifikasi kerentanan, dan \textit{cumulative reward}?
+\end{enumerate}
+
+\section{Tujuan Penelitian}
+\begin{enumerate}
+    \item Merancang sistem automated web penetration testing berbasis Reinforcement Learning (menggunakan algoritma Q-Learning) yang mampu mengadaptasi strategi pengujian kerentanan secara dinamis dengan mempertimbangkan respons balik dari web target guna mengatasi sifat statis pengujian konvensional.
+    
+    \item Merancang, mengimplementasikan, dan mengevaluasi metode \textit{Reinforcement Learning} dengan pendekatan Q-Learning dalam \textit{automated web penetration testing} melalui penentuan komponen \textit{state}, \textit{action}, \textit{reward}, pengaturan \textit{hyperparameter}, serta pengukuran kinerja berdasarkan waktu pengujian, jumlah \textit{request}, tingkat keberhasilan identifikasi kerentanan, dan \textit{cumulative reward}.
+\end{enumerate}
+
+\section{Manfaat Penelitian}
+
+Penelitian ini diharapkan dapat memberikan manfaat dalam pengembangan ilmu pengetahuan di bidang keamanan siber dan kecerdasan buatan, khususnya terkait penerapan \textit{Reinforcement Learning} dalam proses \textit{automated web penetration testing}. Melalui penelitian ini, permasalahan pada metode pengujian konvensional yang kurang adaptif dan kurang efisien dapat dijelaskan secara lebih terarah, sehingga menjadi dasar dalam pengembangan pendekatan pengujian keamanan yang lebih mampu menyesuaikan strategi berdasarkan kondisi lingkungan pengujian.
+
+Selain itu, penelitian ini diharapkan dapat memberikan manfaat praktis berupa rancangan dan implementasi metode Q-Learning untuk membantu proses identifikasi kerentanan pada aplikasi web secara lebih sistematis dan terukur. Hasil evaluasi berdasarkan waktu pengujian, jumlah \textit{request}, tingkat keberhasilan identifikasi kerentanan, dan \textit{cumulative reward} dapat digunakan sebagai dasar untuk menilai apakah pendekatan \textit{Reinforcement Learning} mampu memberikan peningkatan dibandingkan metode pengujian konvensional. Penelitian ini juga dapat menjadi referensi bagi penelitian selanjutnya yang ingin mengembangkan sistem pengujian keamanan otomatis dengan pendekatan pembelajaran adaptif.
+
+
+\section{Batasan Penelitian}
+
+Untuk menjaga fokus dan ruang lingkup penelitian, ditetapkan beberapa batasan sebagai berikut:
+
+\begin{enumerate}
+    \item Target pengujian terbatas pada aplikasi web OWASP Juice Shop sebagai studi kasus.
+    \item Jenis serangan yang diuji meliputi SQL Injection, Cross-Site Scripting (XSS), dan basic fuzzing.
+    \item Metode yang digunakan adalah Reinforcement Learning dengan pendekatan Q-Learning.
+    \item Penelitian difokuskan pada pengujian keamanan aplikasi web dan tidak mencakup aspek keamanan jaringan atau sistem lainnya.
+    \item Evaluasi sistem dilakukan berdasarkan metrik jumlah kerentanan yang ditemukan, waktu pengujian, jumlah request, dan cumulative reward. 
+\end{enumerate}
+
+\section{Sistematika Penulisan}
+
+Sistematika penulisan dalam laporan penelitian ini disusun untuk memberikan gambaran alur pembahasan yang terstruktur. Adapun uraian singkat dari setiap bab adalah sebagai berikut:
+
+\begin{enumerate}
+    \item \textbf{Bab 1 - Pendahuluan} \\
+    Bab ini menjelaskan latar belakang, rumusan masalah, tujuan, manfaat, batasan penelitian, serta sistematika penulisan sebagai panduan struktur keseluruhan laporan penelitian mengenai otomatisasi pengujian keamanan web.
+
+    \item \textbf{Bab 2 - Tinjauan Pustaka} \\
+    Bab ini membahas landasan konseptual dan teoritis yang mencakup definisi \textit{web penetration testing}, prinsip keamanan siber, teknologi \textit{Machine Learning} sebagai infrastruktur pendukung, serta \textit{Reinforcement Learning} sebagai mekanisme otomatisasi pengujian secara adaptif. Bab ini juga meninjau penelitian terdahulu sebagai pembanding dan penguat posisi penelitian.
+
+    \item \textbf{Bab 3 - Metodologi dan Rancangan Sistem} \\
+    Bab ini menjelaskan pendekatan penelitian dan tahapan pengembangan sistem menggunakan model \textit{prototyping}, spesifikasi alat dan bahan, perancangan arsitektur solusi yang memisahkan modul \textit{RL agent} dan \textit{pentest engine}, serta rancangan skenario serangan dan alur proses pembelajaran agen.
+
+    \item \textbf{Bab 4 - Hasil Implementasi dan Pembahasan} \\
+    Bab ini menyajikan hasil implementasi dan pengujian sistem yang telah dirancang, mencakup hasil pengujian Q-Learning, hasil pengujian Deep Q-Network, perbandingan dengan OWASP ZAP, serta analisis dan pembahasan terhadap temuan-temuan yang diperoleh.
+\end{enumerate}
