@@ -14,7 +14,6 @@ Automated web penetration testing using Q-Learning / DQN against OWASP Juice Sho
 | ZAP controlled scan | `python zap_controlled_scan.py` |
 | ZAP comparison | `python zap_comparison.py` |
 | Streamlit dashboard | `streamlit run rl_pentest\dashboard.py` |
-| Export thesis assets | `python scripts/export_thesis_assets.py` (copies figures + reports to `thesis/`) |
 | Install deps | `pip install -r rl_pentest\requirements.txt` |
 | Start Juice Shop | `docker run --rm -p 3000:3000 bkimminich/juice-shop` |
 
@@ -73,11 +72,3 @@ DQN encoding: `encode_state()` in `rl_pentest/agent/dqn_agent.py` one-hot encode
 - `zap_comparison.py` prioritizes: controlled scan report > live scan report > literature (Sahu et al., 2023).
 - `main.py` optionally runs `zap_baseline.py` (python-owasp-zap-v2.4) after training if ZAP daemon is detected.
 - `juice-shop/` is gitignored (not a submodule).
-
-## Overleaf thesis sync
-
-- `thesis/` is a **nested git repo** (gitignored from root) holding the LaTeX manuscript. Its `overleaf` remote (`git.overleaf.com/<PROJECT_ID>`) gives **direct VS Code → Overleaf sync without a GitHub repo**.
-- `scripts/export_thesis_assets.py` copies latest `figures/*_{ql,dqn}.png`, `q_table_heatmap_ql.png`, `summary_{ql,dqn}.json`, and `zap_comparison_report.json` into `thesis/figures/` + `thesis/data/`. Run after the QL/DQN pipelines.
-- `thesis/sync.ps1` commits local changes, `pull overleaf` (merge), then `push overleaf`. `thesis/watch.ps1` is a background watcher that auto-runs `sync.ps1` a few seconds after thesis files change (start: `powershell -ExecutionPolicy Bypass -File thesis\watch.ps1`). Editing in Overleaf and later running `sync.ps1` pulls those changes down.
-- First sync requires one manual login: `git -C thesis push overleaf main` (Git Credential Manager dialog: Overleaf email + Git token from `overleaf.com/user/settings`); credentials are then stored by Windows.
-- Initial content pull from Overleaf (once): `git -C thesis pull overleaf main --allow-unrelated-histories --rebase=false`.

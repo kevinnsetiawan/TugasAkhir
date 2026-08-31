@@ -152,16 +152,6 @@ Output: folder `figures/` menyimpan figure per-agent (`*_ql.png`/`*_dqn.png`): C
 - **Cara A (Literatur Benchmark):** `python zap_comparison.py` — memakai data Q-Learning (`summary_ql.json`/`log_ql.csv`) dan membandingkan dengan laporan ZAP controlled scan bila ada, fallback ke literatur (Sahu et al., 2023).
 - **Cara B (Live/Controlled Scan):** jalankan `python zap_controlled_scan.py` (butuh ZAP daemon di `localhost:8080`), lalu `python zap_comparison.py`.
 
-### 4. Ekspor aset & sinkron naskah ke Overleaf
-```bash
-python scripts/export_thesis_assets.py
-powershell -ExecutionPolicy Bypass -File thesis\watch.ps1   # sinkron otomatis saat file naskah berubah
-```
-`thesis/` adalah nested repo dengan remote `overleaf` — file naskah yang diedit
-di VS Code otomatis commit + pull + push ke project Overleaf Anda saat watcher
-berjalan (atau `thesis\sync.ps1` untuk manual). Login sekali via Git Credential
-Manager (email Overleaf + Git token). Setup lengkap di `thesis/README.md`.
-
 Perbandingan utama memakai **2 endpoint yang sama** antara Q-Learning dan ZAP (`/rest/products/search?q=` dan `/ftp/`) agar adil.
 
 ### 4. Unit Tests
@@ -189,7 +179,6 @@ Dashboard punya pilihan agent (Q-Learning / DQN).
 | `rl_pentest/qtable/dqn_model.pt` | Model PyTorch DQN |
 | `figures/*_ql.png` / `*_dqn.png` | Grafik cumulative reward & efisiensi per agent (+ heatmap QL) |
 | `zap_comparison_report.json` | Laporan komparasi vs ZAP |
-| `thesis/figures/*` , `thesis/data/*` | Aset untuk naskah (tersinkron ke Overleaf) |
 
 Catatan: file lama `log.csv` / `summary.json` tidak lagi ditulis; path tersebut hanya alias ke varian Q-Learning.
 
