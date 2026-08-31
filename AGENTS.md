@@ -76,7 +76,8 @@ DQN encoding: `encode_state()` in `rl_pentest/agent/dqn_agent.py` one-hot encode
 
 ## Overleaf thesis sync
 
-- `thesis/` is a **nested git repo** (gitignored from root) that holds the LaTeX manuscript synced bidirectionally with the author's Overleaf project (free plan) via GitHub Actions + an Overleaf Git token. Never push the root repo to Overleaf — only `thesis/`'s own repo is wired to it.
-- `scripts/export_thesis_assets.py` copies latest `figures/*_{ql,dqn}.png`, `q_table_heatmap_ql.png`, `summary_{ql,dqn}.json`, and `zap_comparison_report.json` into `thesis/figures/` + `thesis/data/`. Run it after the QL/DQN pipelines, then `git -C thesis commit` + `git -C thesis push`.
-- Workflows in `thesis/.github/workflows/`: `overleaf-sync-on-push.yml` pushes repo→Overleaf on every push; `overleaf-sync-hourly.yml` pulls Overleaf→repo hourly. Both need GitHub secrets `OVERLEAF_PROJECT_ID`, `OVERLEAF_EMAIL`, `OVERLEAF_GIT_TOKEN` (see `thesis/README.md`).
-- First-time sync should **pull from Overleaf first** (`git -C thesis pull overleaf main --allow-unrelated-histories --rebase=false`) so the manuscript's history starts from the author's existing Overleaf content.
+- `thesis/` is a **nested git repo** (gitignored from root) holding the LaTeX manuscript. Its `overleaf` remote (`git.overleaf.com/<PROJECT_ID>`) gives **direct VS Code → Overleaf sync without a GitHub repo**.
+- `scripts/export_thesis_assets.py` copies latest `figures/*_{ql,dqn}.png`, `q_table_heatmap_ql.png`, `summary_{ql,dqn}.json`, and `zap_comparison_report.json` into `thesis/figures/` + `thesis/data/`. Run after the QL/DQN pipelines.
+- `thesis/sync.ps1` commits local changes, `pull overleaf` (merge), then `push overleaf`. `thesis/watch.ps1` is a background watcher that auto-runs `sync.ps1` a few seconds after thesis files change (start: `powershell -ExecutionPolicy Bypass -File thesis\watch.ps1`). Editing in Overleaf and later running `sync.ps1` pulls those changes down.
+- First sync requires one manual login: `git -C thesis push overleaf main` (Git Credential Manager dialog: Overleaf email + Git token from `overleaf.com/user/settings`); credentials are then stored by Windows.
+- Initial content pull from Overleaf (once): `git -C thesis pull overleaf main --allow-unrelated-histories --rebase=false`.
