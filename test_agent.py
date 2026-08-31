@@ -4,8 +4,12 @@ import sys
 import tempfile
 import unittest
 
+import numpy as np
+import torch
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "rl_pentest"))
 
+from agent.dqn_agent import DQNAgent, ReplayBuffer, encode_state
 from agent.q_learning_agent import QLearningAgent
 from analyzer.response_analyzer import ResponseAnalyzer
 from reward.reward_system import RewardSystem
@@ -146,6 +150,14 @@ class TestPayloadGenerator(unittest.TestCase):
     def test_get_action_name(self):
         name = self.pg.get_action_name(0)
         self.assertIsInstance(name, str)
+
+    def test_action_count_with_endpoints(self):
+        payloads_file = os.path.join(os.path.dirname(__file__), "rl_pentest", "data", "payloads.json")
+        pg = PayloadGenerator(payloads_file, n_endpoints=8)
+        self.assertEqual(pg.get_action_count(), pg.n_payloads * 8)
+        payload, endpoint = pg.get_payload_and_endpoint(pg.n_payloads * 7 + 1)
+        self.assertEqual(endpoint, 7)
+        self.assertEqual(payload["name"], pg.payloads[1]["name"])
 
     def test_list_payloads(self):
         payloads = self.pg.list_payloads()
@@ -297,6 +309,22 @@ class TestResponseAnalyzer(unittest.TestCase):
         self.assertIn("content_type_category", result)
         self.assertIn("has_csp", result)
 
+    def test_significant_change_uses_endpoint_baseline(self):
+        analyzer = ResponseAnalyzer(baseline_length=100, variance_threshold=0.15)
+        analyzer.set_baselines({5: 1000})
+        resp = MockResponse("A" * 1100, 200)
+        result = analyzer.analyze(resp, "test", endpoint_index=5)
+        self.assertFalse(result["significant_change"])
+        resp2 = MockResponse("A" * 400, 200)
+        result2 = analyzer.analyze(resp2, "test", endpoint_index=5)
+        self.assertTrue(result2["significant_change"])
+
+    def test_significant_change_fallback_to_default_baseline(self):
+        analyzer = ResponseAnalyzer(baseline_length=100, variance_threshold=0.15)
+        resp = MockResponse("A" * 50, 200)
+        result = analyzer.analyze(resp, "test", endpoint_index=5)
+        self.assertTrue(result["significant_change"])
+
     def test_reward_verified_vuln(self):
         analysis = {"vulnerability": "sqli", "request_error": False, "error_flag": True,
                      "reflected_flag": False, "significant_change": True, "length_category": 1}
@@ -308,6 +336,62 @@ class TestResponseAnalyzer(unittest.TestCase):
                      "reflected_flag": False, "significant_change": True, "length_category": 1}
         reward = RewardSystem().compute_reward(analysis, verified=False)
         self.assertEqual(reward, 10)
+
+
+STATE_8 = ("2xx", 1, 0, 0, 0, 3, 1, 1)
+
+
+class TestDQNAgent(unittest.TestCase):
+    def setUp(self):
+        self.agent = DQNAgent(n_actions=88, hidden_dim=16, batch_size=8)
+
+    def test_encode_state_dimension(self):
+        vec = encode_state(STATE_8)
+        self.assertEqual(len(vec), 28)
+        self.assertEqual(vec[0], 1.0)
+        self.assertEqual(vec[5:9].tolist(), [0.0, 1.0, 0.0, 0.0])
+        self.assertEqual(vec[15], 1.0)
+        self.assertEqual(vec[-5:].tolist(), [0.0, 1.0, 0.0, 0.0, 0.0])
+
+    def test_choose_action_within_bounds(self):
+        for _ in range(50):
+            self.assertGreaterEqual(self.agent.choose_action(STATE_8), 0)
+            self.assertLess(self.agent.choose_action(STATE_8), 88)
+
+    def test_replay_buffer_push_and_sample(self):
+        buffer = ReplayBuffer(capacity=8)
+        for _ in range(8):
+            buffer.push(STATE_8, 1, 10.0, STATE_8, False)
+        states, actions, rewards, next_states, dones = buffer.sample(8)
+        self.assertEqual(states.shape[1], 28)
+        self.assertEqual(len(actions), 8)
+        self.assertEqual(actions.shape, (8, 1))
+        self.assertEqual(rewards.shape, (8, 1))
+
+    def test_learn_updates_policy(self):
+        before = [float(self.agent.policy_net(torch.FloatTensor(encode_state(STATE_8)).unsqueeze(0))[0][0].item())]
+        for _ in range(20):
+            self.agent.learn(STATE_8, 3, 50.0, STATE_8)
+        self.agent.target_net.load_state_dict(self.agent.policy_net.state_dict())
+        after = [float(self.agent.policy_net(torch.FloatTensor(encode_state(STATE_8)).unsqueeze(0))[0][0].item())]
+        self.assertNotEqual(round(before[0], 8), round(after[0], 8))
+
+    def test_decay_epsilon(self):
+        before = self.agent.epsilon
+        self.agent.decay_exploration()
+        self.assertLess(self.agent.epsilon, before)
+        self.assertGreaterEqual(self.agent.epsilon, self.agent.min_epsilon)
+
+    def test_save_and_load_model(self):
+        with tempfile.NamedTemporaryFile(suffix=".pt", delete=False) as f:
+            tmp = f.name
+        try:
+            self.agent.save_model(tmp)
+            self.assertTrue(os.path.exists(tmp))
+            loaded = DQNAgent(n_actions=88, hidden_dim=16, batch_size=8)
+            self.assertTrue(loaded.load_model(tmp))
+        finally:
+            os.unlink(tmp)
 
 
 if __name__ == "__main__":

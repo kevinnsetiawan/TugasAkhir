@@ -1,3 +1,4 @@
+import argparse
 import json
 from pathlib import Path
 
@@ -10,27 +11,32 @@ from matplotlib.colors import LinearSegmentedColormap
 
 RESULTS_DIR = Path("rl_pentest/results")
 FIGURES_DIR = Path("figures")
-QTABLE_FILE = Path("rl_pentest/qtable/q_table.json")
+QL_QTABLE_FILE = Path("rl_pentest/qtable/q_table.json")
 PAYLOADS_FILE = Path("rl_pentest/data/payloads.json")
-CSV_LOG = RESULTS_DIR / "log.csv"
-SUMMARY_FILE = RESULTS_DIR / "summary.json"
 
 FIGURES_DIR.mkdir(exist_ok=True)
 
-ACTION_NAMES = [p["name"] for p in json.loads(PAYLOADS_FILE.read_text())]
-STATE_LABELS = {
-    "2xx|medium|0|0": "Initial (200, medium, OK)",
-    "2xx|small|0|0": "200, small, OK",
-    "2xx|large|0|0": "200, large, OK",
-    "4xx|large|0|0": "403/404, large, blocked",
-    "5xx|small|1|0": "500 error, small, SQL err",
+LOG_FILES = {
+    "ql": RESULTS_DIR / "log_ql.csv",
+    "dqn": RESULTS_DIR / "log_dqn.csv",
+}
+SUMMARY_FILES = {
+    "ql": RESULTS_DIR / "summary_ql.json",
+    "dqn": RESULTS_DIR / "summary_dqn.json",
+}
+QTABLE_FILES = {
+    "ql": QL_QTABLE_FILE,
+    "dqn": None,
 }
 
+ACTION_NAMES = [p["name"] for p in json.loads(PAYLOADS_FILE.read_text())]
 
-def load_data():
-    log_df = pd.read_csv(CSV_LOG) if CSV_LOG.exists() else pd.DataFrame()
-    summary = json.loads(SUMMARY_FILE.read_text()) if SUMMARY_FILE.exists() else {}
-    qtable = json.loads(QTABLE_FILE.read_text()) if QTABLE_FILE.exists() else {}
+
+def load_data(agent):
+    log_df = pd.read_csv(LOG_FILES[agent]) if LOG_FILES[agent].exists() else pd.DataFrame()
+    summary = json.loads(SUMMARY_FILES[agent].read_text()) if SUMMARY_FILES[agent].exists() else {}
+    qtable_file = QTABLE_FILES[agent]
+    qtable = json.loads(qtable_file.read_text()) if qtable_file and qtable_file.exists() else {}
     return log_df, summary, qtable
 
 
@@ -51,9 +57,10 @@ def plot_request_count_efficiency(log_df):
     fig, ax = plt.subplots(figsize=(10, 5))
     vuln_hits = log_df[log_df["vulnerability"] != "none"]
     if not vuln_hits.empty:
-        vuln_hits.groupby(vuln_hits.index).size().cumsum().plot(
-            ax=ax, label="Vulnerabilities Found", color="green", linewidth=1.5
-        )
+        cumulative = vuln_hits.copy()
+        cumulative["count"] = 1
+        cumulative["count"] = cumulative["count"].cumsum()
+        cumulative["count"].plot(ax=ax, label="Vulnerabilities Found", color="green", linewidth=1.5)
         det_rate = len(vuln_hits) / len(log_df) * 100
         ax.set_title(f"Request Count Efficiency (Detection Rate: {det_rate:.1f}%)",
                      fontsize=13, fontweight="bold")
@@ -68,6 +75,17 @@ def plot_request_count_efficiency(log_df):
     fig.savefig(FIGURES_DIR / "request_count_efficiency.png", dpi=150)
     plt.close(fig)
     print("[+] Saved figures/request_count_efficiency.png")
+
+
+def _humanize_state(key):
+    parts = str(key).split("|")
+    if len(parts) == 8:
+        status, length_cat, error, reflected, vuln, endpoint, resp_time, content = parts
+        return (
+            f"HTTP {status}, len_cat {length_cat}, err {error}, refl {reflected}, "
+            f"vuln {vuln}, ep{endpoint}, rt {resp_time}, ct {content}"
+        )
+    return key
 
 
 def plot_qtable_heatmap(qtable):
@@ -89,8 +107,7 @@ def plot_qtable_heatmap(qtable):
     ax.set_xticks(range(len(action_labels)))
     ax.set_xticklabels(action_labels, rotation=45, ha="right", fontsize=9)
     ax.set_yticks(range(len(states)))
-    state_labels_short = [STATE_LABELS.get(s, s) for s in states]
-    ax.set_yticklabels(state_labels_short, fontsize=9)
+    ax.set_yticklabels([_humanize_state(s) for s in states], fontsize=9)
 
     for i in range(len(states)):
         for j in range(len(action_labels)):
@@ -112,17 +129,18 @@ def _action_label(idx, max_idx):
     ep = idx // len(ACTION_NAMES)
     return f"{base}@ep{ep}"
 
+
 def print_qtable_analysis(qtable):
     if not qtable:
         return
 
     print("\n" + "=" * 70)
-    print("  ANALISIS Q-TABLE — State-Action Values")
+    print("  ANALISIS Q-TABLE - State-Action Values")
     print("=" * 70)
 
     n_actions = len(ACTION_NAMES)
     for state_key, values in qtable.items():
-        label = STATE_LABELS.get(state_key, state_key)
+        label = _humanize_state(state_key)
         values_arr = np.array(values)
         best_idx = int(np.argmax(values_arr))
         best_val = values_arr[best_idx]
@@ -143,39 +161,56 @@ def print_summary_table(log_df, summary, qtable):
     det_rate = total_vuln / total_req * 100 if total_req else 0
     req_per_vuln = round(total_req / total_vuln, 2) if total_vuln else float("inf")
     cum_reward = summary.get("cumulative_reward", 0)
-    states_visited = len(qtable)
+    states_visited = len(qtable) if qtable else 0
 
     print("\n" + "=" * 70)
     print("  RINGKASAN HASIL PENTEST")
     print("=" * 70)
-    print(f"  {'Total HTTP Requests':35} {total_req}")
-    print(f"  {'Total Vulnerabilities':35} {total_vuln}")
-    print(f"  {'Detection Rate':35} {det_rate:.1f}%")
-    print(f"  {'Requests per Vulnerability':35} {req_per_vuln}")
-    print(f"  {'Cumulative Reward':35} {cum_reward}")
-    print(f"  {'States Visited (Q-Table)':35} {states_visited}")
-    print(f"  {'SQL Injection':35} {summary.get('sql_injection', 0)}")
-    print(f"  {'Reflected XSS':35} {summary.get('reflected_xss', 0)}")
-    print(f"  {'Fuzzing Anomaly':35} {summary.get('fuzzing_anomaly', 0)}")
+    print(f"  {'Total HTTP Requests (payload)':40} {total_req}")
+    print(f"  {'Total Vulnerabilities':40} {total_vuln}")
+    print(f"  {'Detection Rate':40} {det_rate:.1f}%")
+    print(f"  {'Requests per Vulnerability':40} {req_per_vuln}")
+    print(f"  {'Cumulative Reward':40} {cum_reward}")
+    print(f"  {'States Visited (Q-Table)':40} {states_visited}")
+    print(f"  {'SQL Injection':40} {summary.get('sql_injection', 0)}")
+    print(f"  {'Reflected XSS':40} {summary.get('reflected_xss', 0)}")
+    print(f"  {'Fuzzing Anomaly':40} {summary.get('fuzzing_anomaly', 0)}")
+    print(f"  {'Verification Requests':40} {summary.get('verification_requests', 0)}")
+    print(f"  {'Baseline Probe Requests':40} {summary.get('baseline_probe_requests', 0)}")
+    print(f"  {'Total w/ Verification':40} {summary.get('total_requests_with_verification', total_req)}")
     print("=" * 70)
 
 
 def main():
-    log_df, summary, qtable = load_data()
+    parser = argparse.ArgumentParser(description="Visualisasi hasil training RL Pentest")
+    parser.add_argument(
+        "agent",
+        nargs="?",
+        default="ql",
+        choices=["ql", "dqn"],
+        help="Pipeline yang divisualisasi: ql (Q-Learning) atau dqn (DQN). Default: ql",
+    )
+    args = parser.parse_args()
+
+    log_df, summary, qtable = load_data(args.agent)
     if log_df.empty:
-        print("[-] No log data found. Run 'python rl_pentest\\main.py' first.")
+        print(f"[-] Tidak ada data log untuk agent '{args.agent}'. Jalankan training dulu.")
+        print("    Q-Learning: python rl_pentest\\main.py | DQN: python rl_pentest\\train_dqn.py")
         return
 
-    print(f"[+] Loaded {len(log_df)} log entries, {len(qtable)} Q-Table states")
+    print(f"[+] Agent: {args.agent.upper()} | {len(log_df)} log entries, {len(qtable)} Q-Table states")
 
     plot_cumulative_reward(log_df)
     plot_request_count_efficiency(log_df)
-    plot_qtable_heatmap(qtable)
+    if qtable:
+        plot_qtable_heatmap(qtable)
+        print_qtable_analysis(qtable)
+    else:
+        print("[-] Tidak ada Q-Table untuk agent DQN (heatmap hanya untuk Q-Learning)")
     print_summary_table(log_df, summary, qtable)
-    print_qtable_analysis(qtable)
 
     print("\n[+] All figures saved in figures/")
-    print("[+] Q-Table analysis complete\n")
+    print(f"[+] Ringkasan agent '{args.agent}' selesai\n")
 
 
 if __name__ == "__main__":

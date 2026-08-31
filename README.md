@@ -1,35 +1,39 @@
-# Automated Web Penetration Testing Berbasis Q-Learning
+# Automated Web Penetration Testing Berbasis Reinforcement Learning
 **Tugas Akhir — Integrasi Reinforcement Learning dalam Automated Web Penetration Testing: Studi Kasus OWASP Juice Shop**
+
+Dua pendekatan agent: **Q-Learning** (`rl_pentest/main.py`) dan **Deep Q-Network (DQN)** (`rl_pentest/train_dqn.py`), dievaluasi terhadap **OWASP ZAP**.
 
 ---
 
 ## Arsitektur Sistem
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     main.py (Training Loop)                  │
-│  Episode 1..N                                               │
-│  ┌──────────┐   action    ┌─────────────────────────────┐  │
-│  │  Agent   │ ──────────► │       Environment           │  │
-│  │(Q-Table) │             │  ┌──────────────────────┐   │  │
-│  │          │ ◄────────── │  │  pentest_engine.py   │   │  │
-│  │  learn() │  (s',r)     │  │  (HTTP GET Request)  │   │  │
-│  │  Bellman │             │  └──────────┬───────────┘   │  │
-│  └──────────┘             │             │ response       │  │
-│                           │  ┌──────────▼───────────┐   │  │
-│                           │  │    analyzer.py        │   │  │
-│                           │  │  - analyze_response() │   │  │
-│                           │  │  - get_error_ind()    │   │  │
-│                           │  │  - get_reflection()   │   │  │
-│                           │  │                           │  └──────────┬───────────┘   │  │
-│                           │             │ state (5-dim)  │  │
-│                           │  ┌──────────▼───────────┐   │  │
-│                           │  │   Reward Computation  │   │  │
-│                           │  │  +50 / +10 / -1 / -5  │   │  │
-│                           │  └──────────────────────┘   │  │
-│                           └─────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│               main.py / train_dqn.py (Training Loop)          │
+│  Episode 1..N                                                 │
+│  ┌──────────┐   action    ┌──────────────────────────────┐   │
+│  │  Agent   │ ──────────► │        Environment            │   │
+│  │(Q-Table/ │             │  ┌────────────────────────┐   │   │
+│  │   DQN)   │             │  │   pentest_engine       │   │   │
+│  │  learn() │ ◄────────── │  │  (HTTP GET & POST)     │   │   │
+│  └──────────┘  (s',r)     │  └──────────┬─────────────┘   │   │
+│                           │             │ response           │   │
+│                           │  ┌──────────▼─────────────┐   │   │
+│                           │  │    analyzer.py          │   │   │
+│                           │  │  - analyze_response()   │   │   │
+│  training_loop.py         │  │  - baseline per endpoint│   │   │
+│  - run_episode            │  │  - verifikasi "hello"   │   │   │
+│  - probe baseline         │  └──────────┬─────────────┘   │   │
+├───────────────────────────┤             │ state (8-dim)   │   │
+│                           │  ┌──────────▼─────────────┐   │   │
+│                           │  │   Reward Computation    │   │   │
+│                           │  │  +50 / +10 / -1 / -5    │   │   │
+│                           │  └────────────────────────┘   │   │
+│                           └──────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────┘
 ```
+
+Sumber kebenaran kode: `rl_pentest/config.py` (8 endpoint: 5 GET, 3 POST; 11 payload → **88 aksi**).
 
 ---
 
@@ -37,48 +41,51 @@
 
 | File | Peran | Keterangan |
 |------|-------|------------|
-| `rl_pentest/` | Produk Akhir | Paket modular utama (agent, engine, analyzer, reward) |
-| `rl_pentest/agent/q_learning_agent.py` | RL Agent | Q-Learning dengan epsilon-greedy |
-| `rl_pentest/main.py` | Training Loop | Orkestrasi training RL |
-| `rl_pentest/config.py` | Konfigurasi | Hyperparameter, target, dan path |
-| `rl_pentest/reward/reward_system.py` | Reward | Komputasi reward 4 tier |
-| `rl_pentest/analyzer/response_analyzer.py` | Analyzer | Deteksi vuln + state features |
-| `rl_pentest/engine/http_client.py` | HTTP Module | Eksekusi HTTP GET request |
-| `visualize_results.py` | Visualisasi | Generate grafik untuk Bab 4 |
-| `zap_comparison.py` | Komparasi | Q-Learning vs ZAP |
+| `rl_pentest/` | Produk Akhir | Paket modular (agent, engine, analyzer, reward) |
+| `rl_pentest/agent/q_learning_agent.py` | RL Agent QL | Q-Learning epsilon-greedy, optimistic init |
+| `rl_pentest/agent/dqn_agent.py` | RL Agent DQN | DQN dengan replay buffer + target network |
+| `rl_pentest/training_loop.py` | Shared loop | `run_episode`, verifikasi false positive, probe baseline (dipakai QL & DQN) |
+| `rl_pentest/main.py` | Training QL | Orkestrasi training Q-Learning |
+| `rl_pentest/train_dqn.py` | Training DQN | Orkestrasi training DQN |
+| `rl_pentest/config.py` | Konfigurasi | Hyperparameter, target, path |
+| `rl_pentest/reward/reward_system.py` | Reward | Komputasi reward 4 tier + length bonus |
+| `rl_pentest/analyzer/response_analyzer.py` | Analyzer | Deteksi vuln + state features + baseline per endpoint |
+| `rl_pentest/engine/http_client.py` | HTTP Module | Eksekusi HTTP GET/POST |
+| `rl_pentest/engine/payload_generator.py` | Payload | Mapping aksi → (payload, endpoint) |
+| `visualize_results.py` | Visualisasi | Generate grafik untuk Bab 4 (`ql`/`dqn`) |
+| `zap_comparison.py` | Komparasi | Q-Learning vs ZAP (2 endpoint bersama) |
 | `test_agent.py` | Unit Tests | Pengujian regresi otomatis |
 
 ---
 
-## State Representation (5 Dimensi)
+## State Representation (8 Dimensi)
 
 ```python
 state = (
     status_category,      # '2xx' | '3xx' | '4xx' | '5xx' | 'error'
     length_category,      # 0 (0-1499) | 1 (1500-2499) | 2 (2500-3499) | 3 (3500+)
-    error_flag,           # 1 jika ada keyword error SQL, else 0
-    reflected_flag,       # 1 jika payload tercermin di response, else 0
-    vuln_indicator,       # 1 jika vulnerability terdeteksi, else 0
+    error_flag,           # 1 jika ada keyword error SQL
+    reflected_flag,       # 1 jika payload tercermin di response
+    vuln_indicator,       # 1 jika vulnerability terdeteksi
+    endpoint_index,       # 0..7 (indeks endpoint)
+    response_time_category,  # 0 cepat | 1 medium | 2 lambat
+    content_type_category,   # 0 json | 1 html | 2 text | 3 xml | 4 other
 )
 ```
 
+DQN meng-encode state ini menjadi vektor 28 dimensi (one-hot) lewat `encode_state()` di `agent/dqn_agent.py`.
+
 ---
 
-## Action Space (10 Actions)
+## Action Space (88 Aksi)
 
-| ID | Nama | Kategori | Payload |
-|----|------|----------|---------|
-| 0 | sqli_basic | sqli | `' OR '1'='1` |
-| 1 | sqli_union | sqli | `' UNION SELECT NULL--` |
-| 2 | sqli_time | sqli | `' OR SLEEP(5)--` |
-| 3 | xss_script | xss | `<script>alert('test')</script>` |
-| 4 | xss_img | xss | `<img src=x onerror=alert('xss')>` |
-| 5 | xss_event | xss | `<svg/onload=alert('xss')>` |
-| 6 | fuzz_unicode | fuzzing | `\"'><script>\n` |
-| 7 | fuzz_long | fuzzing | `AAAA...` (100x A) |
-| 8 | fuzz_format | fuzzing | `%s%s%s%s%s` |
-| 9 | fuzz_brutal | fuzzing | `<iframe src=javascript:alert('xss')>` |
+| Kategori | Jumlah | Contoh Payload |
+|----------|--------|----------------|
+| SQL Injection | 4 | `' OR '1'='1`, `' UNION SELECT NULL--`, `' OR SLEEP(5)--`, login JSON |
+| Reflected XSS | 3 | `<script>alert(document.domain)</script>`, `<img src=x onerror=...>`, review JSON |
+| Fuzzing | 4 | `../../../etc/passwd`, fuzz panjang, `%s%s%s%s`, `admin%00` |
 
+Encoding aksi: `endpoint = action // 11`, `payload = action % 11`.
 Sumber: `rl_pentest/data/payloads.json`
 
 ---
@@ -94,7 +101,9 @@ Sumber: `rl_pentest/data/payloads.json`
 | Normal request | **-1** | Cat 0: 0, Cat 1: 0, Cat 2: +5, Cat 3: +10 |
 | Hard failure | **-5** | (no length bonus) |
 
-Length categories: 0 (0-1499), 1 (1500-2499), 2 (2500-3499), 3 (3500+)
+**Verifikasi false positive**: setiap temuan dikirim ulang payload benign `"hello"` ke endpoint yang sama; jika benign juga terdeteksi, reward diturunkan ke **+10 (anomali)**.
+
+**Baseline per endpoint**: sebelum training, panjang respons benign di-probe untuk tiap endpoint; `significant_change` dihitung terhadap baseline endpoint tersebut (bukan konstanta global) agar deteksi tidak terinflasi.
 
 ---
 
@@ -107,7 +116,7 @@ Q(s, a) ← Q(s, a) + α [ r + γ · max_a' Q(s', a') − Q(s, a) ]
 γ (discount factor) = 0.9
 ε (initial)         = 1.0
 ε_min               = 0.1
-ε_decay             = 0.95 (per episode)
+ε_decay             = 0.90 (per episode)
 ```
 
 ---
@@ -115,31 +124,35 @@ Q(s, a) ← Q(s, a) + α [ r + γ · max_a' Q(s', a') − Q(s, a) ]
 ## Cara Menjalankan
 
 ### Prasyarat
-- OWASP Juice Shop berjalan di `http://localhost:3000`
-- Python virtual environment aktif
+- OWASP Juice Shop (atau target setara) aktif di `http://localhost:3000`
+  ```bash
+  docker run --rm -p 3000:3000 bkimminich/juice-shop
+  ```
+- Python virtual environment aktif + `pip install -r rl_pentest\requirements.txt`
 
-### 1. Training Utama
-```bash
-python rl_pentest\main.py
-```
-Output: `rl_pentest/results/log.csv`, `rl_pentest/results/summary.json`, `rl_pentest/qtable/q_table.json`
+### 1. Training
+- **Q-Learning** (output `log_ql.csv`, `summary_ql.json`, `q_table.json`):
+  ```bash
+  python rl_pentest\main.py
+  ```
+- **DQN** (output `log_dqn.csv`, `summary_dqn.json`, `dqn_model.pt`):
+  ```bash
+  python rl_pentest\train_dqn.py
+  ```
+
+Kedua agent memakai file output terpisah sehingga hasil tidak saling menimpa.
 
 ### 2. Visualisasi (untuk Bab 4)
 ```bash
-python visualize_results.py
+python visualize_results.py ql     # atau 'dqn'
 ```
-Output: folder `figures/` berisi grafik Cumulative Reward & Request Count Efficiency
+Output: folder `figures/` berisi Cumulative Reward & Request Count Efficiency (+ Q-Table heatmap untuk QL).
 
 ### 3. Komparasi ZAP
-Anda dapat melakukan komparasi menggunakan dua cara:
-- **Cara A (Literatur Benchmark):** Cukup jalankan `python zap_comparison.py`. Script otomatis menggunakan data benchmark literatur jika file laporan riil tidak terdeteksi.
-- **Cara B (Live Scan OWASP ZAP):**
-  1. Jalankan pemindaian (Active Scan) pada OWASP Juice Shop (`http://localhost:3000`) menggunakan OWASP ZAP GUI.
-  2. Ekspor hasil pemindaian ke format JSON: **Report -> Generate Report -> Template: Traditional JSON Report**.
-  3. Simpan file laporan tersebut dengan nama `zap_report.json` di direktori `rl_pentest/`.
-  4. Jalankan script `python zap_comparison.py`.
+- **Cara A (Literatur Benchmark):** `python zap_comparison.py` — memakai data Q-Learning (`summary_ql.json`/`log_ql.csv`) dan membandingkan dengan laporan ZAP controlled scan bila ada, fallback ke literatur (Sahu et al., 2023).
+- **Cara B (Live/Controlled Scan):** jalankan `python zap_controlled_scan.py` (butuh ZAP daemon di `localhost:8080`), lalu `python zap_comparison.py`.
 
-Output: `zap_comparison_report.json`
+Perbandingan utama memakai **2 endpoint yang sama** antara Q-Learning dan ZAP (`/rest/products/search?q=` dan `/ftp/`) agar adil.
 
 ### 4. Unit Tests
 ```bash
@@ -150,6 +163,7 @@ python test_agent.py
 ```bash
 streamlit run rl_pentest\dashboard.py
 ```
+Dashboard punya pilihan agent (Q-Learning / DQN).
 
 ---
 
@@ -157,18 +171,23 @@ streamlit run rl_pentest\dashboard.py
 
 | File | Isi |
 |------|-----|
-| `rl_pentest/results/log.csv` | Log per-step RL agent |
-| `rl_pentest/results/summary.json` | Ringkasan evaluasi akhir |
-| `rl_pentest/qtable/q_table.json` | Q-Table hasil training |
-| `figures/cumulative_reward.png` | Grafik Cumulative Reward |
-| `figures/request_count_efficiency.png` | Grafik efisiensi Request Count |
+| `rl_pentest/results/log_ql.csv` | Log per-step agent Q-Learning |
+| `rl_pentest/results/summary_ql.json` | Ringkasan evaluasi Q-Learning |
+| `rl_pentest/results/log_dqn.csv` | Log per-step agent DQN |
+| `rl_pentest/results/summary_dqn.json` | Ringkasan evaluasi DQN |
+| `rl_pentest/qtable/q_table.json` | Q-Table hasil training QL |
+| `rl_pentest/qtable/dqn_model.pt` | Model PyTorch DQN |
+| `figures/*.png` | Grafik cumulative reward & efisiensi |
 | `zap_comparison_report.json` | Laporan komparasi vs ZAP |
+
+Catatan: file lama `log.csv` / `summary.json` tidak lagi ditulis; path tersebut hanya alias ke varian Q-Learning.
 
 ---
 
 ## Catatan Akademis
 
-- **Detection Rate** = total_vuln / total_episodes (bukan "precision" ML)
-- **Perbandingan ZAP** menggunakan nilai dari literatur (Sahu et al., 2023), bukan live execution
-- **Produk akhir** berada di folder `rl_pentest/` sebagai paket modular
-- **Reward System** mengacu Tabel 3.5 proposal: +50 (vuln), +10 (anomali), -1 (normal), -5 (gagal)
+- **Detection Rate** = total_vuln / total_requests (bukan "precision" ML — lihat `summary_ql.json.precision`).
+- **Metrik jujur jumlah request**: `total_requests` hanya menghitung request payload. Request verifikasi benign (`verification_requests`), probe baseline (`baseline_probe_requests`), dan total keseluruhan (`total_requests_with_verification`) dicatat terpisah di summary.
+- **Perbandingan ZAP**: subset 2 endpoint bersama (`/rest/products/search?q=`, `/ftp/`) untuk menghindari perbandingan scope yang tidak adil; keterbatasan lain dicantumkan di `limitations` pada laporan.
+- **Produk akhir** berada di folder `rl_pentest/` sebagai paket modular.
+- **Reward System** mengacu Tabel 3.5 proposal: +50 (vuln), +10 (anomali), -1 (normal), -5 (gagal).
