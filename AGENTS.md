@@ -14,6 +14,7 @@ Automated web penetration testing using Q-Learning / DQN against OWASP Juice Sho
 | ZAP controlled scan | `python zap_controlled_scan.py` |
 | ZAP comparison | `python zap_comparison.py` |
 | Streamlit dashboard | `streamlit run rl_pentest\dashboard.py` |
+| Export thesis assets | `python scripts/export_thesis_assets.py` (copies figures + reports to `thesis/`) |
 | Install deps | `pip install -r rl_pentest\requirements.txt` |
 | Start Juice Shop | `docker run --rm -p 3000:3000 bkimminich/juice-shop` |
 
@@ -72,3 +73,10 @@ DQN encoding: `encode_state()` in `rl_pentest/agent/dqn_agent.py` one-hot encode
 - `zap_comparison.py` prioritizes: controlled scan report > live scan report > literature (Sahu et al., 2023).
 - `main.py` optionally runs `zap_baseline.py` (python-owasp-zap-v2.4) after training if ZAP daemon is detected.
 - `juice-shop/` is gitignored (not a submodule).
+
+## Overleaf thesis sync
+
+- `thesis/` is a **nested git repo** (gitignored from root) that holds the LaTeX manuscript synced bidirectionally with the author's Overleaf project (free plan) via GitHub Actions + an Overleaf Git token. Never push the root repo to Overleaf — only `thesis/`'s own repo is wired to it.
+- `scripts/export_thesis_assets.py` copies latest `figures/*_{ql,dqn}.png`, `q_table_heatmap_ql.png`, `summary_{ql,dqn}.json`, and `zap_comparison_report.json` into `thesis/figures/` + `thesis/data/`. Run it after the QL/DQN pipelines, then `git -C thesis commit` + `git -C thesis push`.
+- Workflows in `thesis/.github/workflows/`: `overleaf-sync-on-push.yml` pushes repo→Overleaf on every push; `overleaf-sync-hourly.yml` pulls Overleaf→repo hourly. Both need GitHub secrets `OVERLEAF_PROJECT_ID`, `OVERLEAF_EMAIL`, `OVERLEAF_GIT_TOKEN` (see `thesis/README.md`).
+- First-time sync should **pull from Overleaf first** (`git -C thesis pull overleaf main --allow-unrelated-histories --rebase=false`) so the manuscript's history starts from the author's existing Overleaf content.
