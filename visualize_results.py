@@ -40,7 +40,7 @@ def load_data(agent):
     return log_df, summary, qtable
 
 
-def plot_cumulative_reward(log_df):
+def plot_cumulative_reward(log_df, agent):
     fig, ax = plt.subplots(figsize=(10, 5))
     log_df["reward"].cumsum().plot(ax=ax, color="royalblue", linewidth=1.5)
     ax.set_title("Cumulative Reward per Request", fontsize=13, fontweight="bold")
@@ -48,12 +48,13 @@ def plot_cumulative_reward(log_df):
     ax.set_ylabel("Cumulative Reward")
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
-    fig.savefig(FIGURES_DIR / "cumulative_reward.png", dpi=150)
+    filename = f"cumulative_reward_{agent}.png"
+    fig.savefig(FIGURES_DIR / filename, dpi=150)
     plt.close(fig)
-    print("[+] Saved figures/cumulative_reward.png")
+    print(f"[+] Saved figures/{filename}")
 
 
-def plot_request_count_efficiency(log_df):
+def plot_request_count_efficiency(log_df, agent):
     fig, ax = plt.subplots(figsize=(10, 5))
     vuln_hits = log_df[log_df["vulnerability"] != "none"]
     if not vuln_hits.empty:
@@ -72,9 +73,10 @@ def plot_request_count_efficiency(log_df):
     ax.grid(True, alpha=0.3)
     ax.legend()
     fig.tight_layout()
-    fig.savefig(FIGURES_DIR / "request_count_efficiency.png", dpi=150)
+    filename = f"request_count_efficiency_{agent}.png"
+    fig.savefig(FIGURES_DIR / filename, dpi=150)
     plt.close(fig)
-    print("[+] Saved figures/request_count_efficiency.png")
+    print(f"[+] Saved figures/{filename}")
 
 
 def _humanize_state(key):
@@ -88,7 +90,7 @@ def _humanize_state(key):
     return key
 
 
-def plot_qtable_heatmap(qtable):
+def plot_qtable_heatmap(qtable, agent):
     if not qtable:
         print("[-] No Q-Table to visualize")
         return
@@ -119,9 +121,10 @@ def plot_qtable_heatmap(qtable):
                  fontsize=13, fontweight="bold")
     fig.colorbar(im, ax=ax, label="Q-Value", shrink=0.8)
     fig.tight_layout()
-    fig.savefig(FIGURES_DIR / "q_table_heatmap.png", dpi=150)
+    filename = f"q_table_heatmap_{agent}.png"
+    fig.savefig(FIGURES_DIR / filename, dpi=150)
     plt.close(fig)
-    print("[+] Saved figures/q_table_heatmap.png")
+    print(f"[+] Saved figures/{filename}")
 
 
 def _action_label(idx, max_idx):
@@ -200,10 +203,10 @@ def main():
 
     print(f"[+] Agent: {args.agent.upper()} | {len(log_df)} log entries, {len(qtable)} Q-Table states")
 
-    plot_cumulative_reward(log_df)
-    plot_request_count_efficiency(log_df)
+    plot_cumulative_reward(log_df, args.agent)
+    plot_request_count_efficiency(log_df, args.agent)
     if qtable:
-        plot_qtable_heatmap(qtable)
+        plot_qtable_heatmap(qtable, args.agent)
         print_qtable_analysis(qtable)
     else:
         print("[-] Tidak ada Q-Table untuk agent DQN (heatmap hanya untuk Q-Learning)")

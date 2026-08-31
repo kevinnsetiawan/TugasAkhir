@@ -46,7 +46,7 @@ DQN encoding: `encode_state()` in `rl_pentest/agent/dqn_agent.py` one-hot encode
 - **False positive verification**: benign `"hello"` sent alongside each finding. If benign also flags, reward demoted to +10 anomaly. Verification adds 1 request per finding, tracked as `verification_requests` in summary (not included in `total_requests`).
 - `summary_*.json` now also include `baseline_probe_requests` and `total_requests_with_verification`.
 - POST endpoints (`/rest/user/login`, `/api/Reviews`, `/api/Feedbacks`) use JSON body. Payloads `sqli_login` and `xss_review` are JSON strings parsed by `HTTPClient._send_post`.
-- `visualize_results.py` takes an agent arg (`ql`/`dqn`); uses `matplotlib.use("Agg")` produced 3 figures: `cumulative_reward.png`, `request_count_efficiency.png`, `q_table_heatmap.png` (heatmap only for QL).
+- `visualize_results.py` takes an agent arg (`ql`/`dqn`); uses `matplotlib.use("Agg")`. Figures are saved per-agent (`*_ql.png`/`*_dqn.png`): `cumulative_reward_{agent}.png`, `request_count_efficiency_{agent}.png`, `q_table_heatmap_ql.png` (heatmap only for QL).
 - "precision" in metrics.py = `total_vuln / total_episodes` (not ML precision / recall). `requests_per_vulnerability` = `inf` when no vulns.
 - `zap_comparison.py` reads ONLY QL data (`summary_ql.json`/`log_ql.csv`) and refuses to run if neither exists. Efficiency comparison uses the 2 shared endpoints (`endpoint_index` 0 and 1: search & /ftp/) so it is apples-to-apples with `zap_controlled_scan.py`.
 - `qtable/` and `results/` are NOT gitignored — training artifacts are tracked by default.
@@ -63,7 +63,7 @@ DQN encoding: `encode_state()` in `rl_pentest/agent/dqn_agent.py` one-hot encode
 | DQN model | `rl_pentest/qtable/dqn_model.pt` (PyTorch checkpoint) |
 | DQN training log | `rl_pentest/results/log_dqn.csv` |
 | DQN summary | `rl_pentest/results/summary_dqn.json` |
-| Figures | `figures/` (3 PNGs) |
+| Figures | `figures/` (per-agent PNGs: `*_ql.png`/`*_dqn.png`) |
 | ZAP comparison | `zap_comparison_report.json` |
 
 ## ZAP integration

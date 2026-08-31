@@ -146,7 +146,7 @@ Kedua agent memakai file output terpisah sehingga hasil tidak saling menimpa.
 ```bash
 python visualize_results.py ql     # atau 'dqn'
 ```
-Output: folder `figures/` berisi Cumulative Reward & Request Count Efficiency (+ Q-Table heatmap untuk QL).
+Output: folder `figures/` menyimpan figure per-agent (`*_ql.png`/`*_dqn.png`): Cumulative Reward & Request Count Efficiency untuk tiap agent (+ Q-Table heatmap untuk QL) — hasil QL dan DQN tidak saling menimpa.
 
 ### 3. Komparasi ZAP
 - **Cara A (Literatur Benchmark):** `python zap_comparison.py` — memakai data Q-Learning (`summary_ql.json`/`log_ql.csv`) dan membandingkan dengan laporan ZAP controlled scan bila ada, fallback ke literatur (Sahu et al., 2023).
@@ -177,7 +177,7 @@ Dashboard punya pilihan agent (Q-Learning / DQN).
 | `rl_pentest/results/summary_dqn.json` | Ringkasan evaluasi DQN |
 | `rl_pentest/qtable/q_table.json` | Q-Table hasil training QL |
 | `rl_pentest/qtable/dqn_model.pt` | Model PyTorch DQN |
-| `figures/*.png` | Grafik cumulative reward & efisiensi |
+| `figures/*_ql.png` / `*_dqn.png` | Grafik cumulative reward & efisiensi per agent (+ heatmap QL) |
 | `zap_comparison_report.json` | Laporan komparasi vs ZAP |
 
 Catatan: file lama `log.csv` / `summary.json` tidak lagi ditulis; path tersebut hanya alias ke varian Q-Learning.
