@@ -1,18 +1,32 @@
 {
   "comparison": "Q-Learning vs OWASP ZAP",
   "zap_source": "ZAP Controlled Scan (2 endpoint)",
-  "target_endpoints": "2 endpoint: /rest/products/search?q= dan /ftp/",
+  "scope_note": "Perbandingan efisiensi utama memakai 2 endpoint yang sama (/rest/products/search?q= dan /ftp/) agar adil (apples-to-apples). ZAP controlled scan hanya memindai kedua endpoint ini, sedangkan Q-Learning dilatih pada 8 endpoint.",
   "ql_results": {
+    "scope": "8 endpoint (seluruh training)",
     "total_requests": 200,
-    "total_vulnerabilities": 183,
+    "total_vulnerabilities": 179,
     "vuln_types": {
-      "SQL Injection": 173,
+      "SQL Injection": 169,
       "Reflected XSS": 6,
-      "Path / Fuzzing": 4
+      "Fuzzing Anomaly": 4
     },
-    "requests_per_vulnerability": 1.09,
-    "cumulative_reward": 11058,
-    "states_visited": 21
+    "requests_per_vulnerability": 1.12,
+    "cumulative_reward": 10831,
+    "states_visited": 21,
+    "verification_requests": 179,
+    "baseline_probe_requests": 8,
+    "total_requests_with_verification": 387
+  },
+  "ql_shared_2_endpoint": {
+    "total_requests": 175,
+    "total_vulnerabilities": 167,
+    "vuln_types": {
+      "SQL Injection": 167,
+      "Reflected XSS": 0,
+      "Fuzzing Anomaly": 0
+    },
+    "requests_per_vulnerability": 1.05
   },
   "zap_results": {
     "source": "ZAP Controlled Scan (2 endpoint)",
@@ -28,9 +42,15 @@
     "requests_per_vulnerability": 792.5
   },
   "analysis": {
-    "efficiency_comparison": "Q-Learning: 1.09 request/vuln, ZAP: 792.5 request/vuln. Q-Learning 727.1x lebih efisien per request.",
-    "adaptivity": "Q-Learning belajar dari pengalaman (epsilon decay, Q-table update). Semakin banyak episode, semakin tepat pemilihan payload. ZAP tidak memiliki mekanisme belajar \u2014 setiap scan statis.",
-    "coverage": "Q-Learning hanya menggunakan 200 request terarah (10 payload). ZAP menggunakan 1585 request dengan ribuan variasi attack. Q-Learning unggul dalam efisiensi; ZAP unggul dalam breadth of coverage.",
-    "conclusion": "Pada 2 endpoint yang sama, Q-Learning mendeteksi 183 kerentanan dalam 200 request (1.09 req/vuln), sementara ZAP mendeteksi 2 dalam 1585 request (792.5 req/vuln). Q-Learning cocok untuk continuous pentesting yang adaptif dan efisien; ZAP cocok untuk comprehensive one-time scanning."
-  }
+    "efficiency_comparison": "Q-Learning (175 request) mendeteksi 167 kerentanan (1.05 request/vuln). ZAP (1585 request) mendeteksi 2 kerentanan (792.5 request/vuln). Q-Learning 754.8x lebih efisien per request.",
+    "adaptivity": "Q-Learning belajar dari pengalaman (epsilon decay, Q-table update). Semakin banyak episode, semakin tepat pemilihan payload. ZAP tidak memiliki mekanisme belajar - setiap scan statis.",
+    "coverage": "Q-Learning dilatih pada 8 endpoint dengan 11 payload (total 88 aksi, 200 request). Subset 2 endpoint bersama yang sama dengan ZAP: 175 request, 167 kerentanan. ZAP memakai 1585 request termasuk spider dan active scan pada 2 URL. ZAP unggul dalam variasi attack; Q-Learning unggul dalam efisiensi per request.",
+    "conclusion": "Pada 2 endpoint yang sama, Q-Learning mendeteksi 167 kerentanan dalam 175 request (1.05 req/vuln), sementara ZAP mendeteksi 2 dalam 1585 request (792.5 req/vuln). Q-Learning 754.8x lebih efisien per request. Q-Learning cocok untuk continuous pentesting yang adaptif dan efisien; ZAP cocok untuk comprehensive one-time scanning."
+  },
+  "limitations": [
+    "ZAP controlled scan memindai 2 endpoint dengan request spider + active scan; Q-Learning memakai payload terarah, sehingga metrik request tidak sebanding langsung.",
+    "Deteksi Q-Learning berbasis signature response (error/reflection/significant change) dengan verifikasi benign 'hello'; bukan eksploitasi nyata sehingga tetap berpotensi false positive.",
+    "total_requests Q-Learning hanya menghitung request payload; request verifikasi benign (verification_requests) dan probe baseline (baseline_probe_requests) dicatat terpisah.",
+    "'requests_per_vulnerability' dan 'precision' mengikuti definisi Tugas Akhir (detection rate = total_vuln / total_requests), bukan metrik Precision/Recall ML."
+  ]
 }
