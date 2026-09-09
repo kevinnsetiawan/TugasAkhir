@@ -48,7 +48,7 @@ def write_df(ws, df: pd.DataFrame):
 
 
 def sheet_training(wb):
-    df = pd.read_csv(RESULTS_DIR / "log.csv", encoding="utf-8")
+    df = pd.read_csv(RESULTS_DIR / "log_ql.csv", encoding="utf-8")
     ws = wb.active
     ws.title = "Data Training RL"
     write_df(ws, df)
@@ -157,7 +157,7 @@ def sheet_comparison(wb):
 
 
 def sheet_summary(wb):
-    rep = json.loads((RESULTS_DIR / "summary.json").read_text(encoding="utf-8"))
+    rep = json.loads((RESULTS_DIR / "summary_ql.json").read_text(encoding="utf-8"))
     rows = list(rep.items())
     ws = wb.create_sheet("Ringkasan Training")
     write_df(ws, pd.DataFrame({"Metrik": [r[0] for r in rows], "Nilai": [r[1] for r in rows]}))
