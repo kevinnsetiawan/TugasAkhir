@@ -5,18 +5,18 @@
   "ql_results": {
     "scope": "8 endpoint (seluruh training)",
     "total_requests": 200,
-    "total_vulnerabilities": 179,
+    "total_vulnerabilities": 180,
     "vuln_types": {
-      "SQL Injection": 169,
+      "SQL Injection": 170,
       "Reflected XSS": 6,
       "Fuzzing Anomaly": 4
     },
-    "requests_per_vulnerability": 1.12,
-    "cumulative_reward": 10831,
-    "states_visited": 21,
-    "verification_requests": 179,
+    "requests_per_vulnerability": 1.11,
+    "cumulative_reward": 10841,
+    "states_visited": 25,
+    "verification_requests": 180,
     "baseline_probe_requests": 8,
-    "total_requests_with_verification": 387
+    "total_requests_with_verification": 388
   },
   "ql_shared_2_endpoint": {
     "total_requests": 175,
