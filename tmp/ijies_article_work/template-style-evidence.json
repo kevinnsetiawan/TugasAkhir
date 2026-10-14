@@ -1,0 +1,161 @@
+{
+  "input": "C:\\Users\\Kevin Setiawan\\Downloads\\(Ver. 2026.10.1) IJIES_Format.docx",
+  "fonts_by_char_count": {
+    "Times New Roman": 8420,
+    "Tahoma": 3466
+  },
+  "direct_run_formatting_runs": 362,
+  "direct_paragraph_formatting_paragraphs": 86,
+  "heading_like_paragraphs_not_heading_style": [
+    {
+      "para_index": 2,
+      "text": "Please Insert Main Title (Bold type, 14-point font size)",
+      "style": "Normal"
+    },
+    {
+      "para_index": 4,
+      "text": "Fisrt Name and Family Name1*          Fisrt Name and Family Name2",
+      "style": "Normal"
+    },
+    {
+      "para_index": 16,
+      "text": "Introduction",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 18,
+      "text": "Formatting your paper",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 21,
+      "text": "Main title",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 23,
+      "text": "Author name(s) and affiliation(s)",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 26,
+      "text": "Type-style and fonts",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 28,
+      "text": "Main text",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 30,
+      "text": "First-order headings",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 36,
+      "text": "Footnotes",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 49,
+      "text": "Figures and tables",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 55,
+      "text": "Equations",
+      "style": "List Paragraph"
+    },
+    {
+      "para_index": 89,
+      "text": "Before Submission",
+      "style": "Normal"
+    },
+    {
+      "para_index": 111,
+      "text": "Information of IJIES Awards",
+      "style": "Normal"
+    },
+    {
+      "para_index": 114,
+      "text": "Excellent Citation Award",
+      "style": "Normal"
+    },
+    {
+      "para_index": 125,
+      "text": "Outstanding Citation Award",
+      "style": "Normal"
+    },
+    {
+      "para_index": 136,
+      "text": "Immune system",
+      "style": "Normal"
+    },
+    {
+      "para_index": 137,
+      "text": "Vehicle detection system",
+      "style": "Normal"
+    }
+  ],
+  "examples": {
+    "direct_paragraph_formatting": [
+      {
+        "para_index": 1,
+        "text": "",
+        "style": "Normal"
+      },
+      {
+        "para_index": 2,
+        "text": "Please Insert Main Title (Bold type, 14-point font size)",
+        "style": "Normal"
+      },
+      {
+        "para_index": 3,
+        "text": "",
+        "style": "Normal"
+      },
+      {
+        "para_index": 4,
+        "text": "Fisrt Name and Family Name1*          Fisrt Name and Family Name2",
+        "style": "Normal"
+      },
+      {
+        "para_index": 5,
+        "text": "",
+        "style": "Normal"
+      }
+    ],
+    "direct_run_formatting": [
+      {
+        "para_index": 2,
+        "run_text": "Please",
+        "style": "Normal"
+      },
+      {
+        "para_index": 2,
+        "run_text": " Insert Main Title",
+        "style": "Normal"
+      },
+      {
+        "para_index": 2,
+        "run_text": " (",
+        "style": "Normal"
+      },
+      {
+        "para_index": 2,
+        "run_text": "Bold type, 14-point font size",
+        "style": "Normal"
+      },
+      {
+        "para_index": 2,
+        "run_text": ")",
+        "style": "Normal"
+      }
+    ]
+  },
+  "notes": [
+    "Direct formatting is not always wrong, but it often causes inconsistent output when templates change.",
+    "Heading-like paragraphs not using Heading styles can break TOC and accessibility."
+  ]
+}

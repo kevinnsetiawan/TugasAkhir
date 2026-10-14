@@ -4,53 +4,59 @@
   "scope_note": "Perbandingan efisiensi utama memakai 2 endpoint yang sama (/rest/products/search?q= dan /ftp/) agar adil (apples-to-apples). ZAP controlled scan hanya memindai kedua endpoint ini, sedangkan Q-Learning dilatih pada 8 endpoint.",
   "ql_results": {
     "scope": "8 endpoint (seluruh training)",
-    "total_requests": 200,
-    "total_vulnerabilities": 180,
+    "total_requests": 1585,
+    "total_vulnerabilities": 14,
     "vuln_types": {
-      "SQL Injection": 170,
-      "Reflected XSS": 6,
-      "Fuzzing Anomaly": 4
+      "SQL Injection": 6,
+      "Reflected XSS": 5,
+      "Fuzzing Anomaly": 3
     },
-    "requests_per_vulnerability": 1.11,
-    "cumulative_reward": 10841,
-    "states_visited": 25,
-    "verification_requests": 180,
+    "requests_per_vulnerability": 113.21,
+    "cumulative_reward": 3785,
+    "states_visited": 27,
+    "training_duration_seconds": 154.23,
+    "verification_requests": 47,
     "baseline_probe_requests": 8,
-    "total_requests_with_verification": 388
+    "total_requests_with_verification": 1640
   },
   "ql_shared_2_endpoint": {
-    "total_requests": 175,
-    "total_vulnerabilities": 167,
+    "total_requests": 1223,
+    "total_vulnerabilities": 10,
     "vuln_types": {
-      "SQL Injection": 167,
-      "Reflected XSS": 0,
-      "Fuzzing Anomaly": 0
+      "SQL Injection": 5,
+      "Reflected XSS": 2,
+      "Fuzzing Anomaly": 3
     },
-    "requests_per_vulnerability": 1.05
+    "requests_per_vulnerability": 122.3
   },
   "zap_results": {
     "source": "ZAP Controlled Scan (2 endpoint)",
     "total_requests": 1585,
+    "active_scan_requests": null,
     "total_alerts_raw": 32,
     "total_vulnerabilities": 2,
     "alerts_by_category": {
       "SQL Injection": 1,
       "Reflected XSS": 1,
       "Path Injection": 0,
-      "Other": 30
+      "Other": 32
     },
-    "requests_per_vulnerability": 792.5
+    "vuln_counting_scope": "alert kategori sqli/xss/path (tanpa filter risiko)",
+    "requests_per_vulnerability": 792.5,
+    "duration_seconds": null
   },
   "analysis": {
-    "efficiency_comparison": "Q-Learning (175 request) mendeteksi 167 kerentanan (1.05 request/vuln). ZAP (1585 request) mendeteksi 2 kerentanan (792.5 request/vuln). Q-Learning 754.8x lebih efisien per request.",
+    "efficiency_comparison": "Q-Learning (1223 request) mendeteksi 10 kerentanan (122.3 request/vuln). ZAP (1585 request) mendeteksi 2 kerentanan (792.5 request/vuln). Q-Learning 6.5x lebih efisien per request.",
     "adaptivity": "Q-Learning belajar dari pengalaman (epsilon decay, Q-table update). Semakin banyak episode, semakin tepat pemilihan payload. ZAP tidak memiliki mekanisme belajar - setiap scan statis.",
-    "coverage": "Q-Learning dilatih pada 8 endpoint dengan 11 payload (total 88 aksi, 200 request). Subset 2 endpoint bersama yang sama dengan ZAP: 175 request, 167 kerentanan. ZAP memakai 1585 request termasuk spider dan active scan pada 2 URL. ZAP unggul dalam variasi attack; Q-Learning unggul dalam efisiensi per request.",
-    "conclusion": "Pada 2 endpoint yang sama, Q-Learning mendeteksi 167 kerentanan dalam 175 request (1.05 req/vuln), sementara ZAP mendeteksi 2 dalam 1585 request (792.5 req/vuln). Q-Learning 754.8x lebih efisien per request. Q-Learning cocok untuk continuous pentesting yang adaptif dan efisien; ZAP cocok untuk comprehensive one-time scanning."
+    "coverage": "Q-Learning dilatih pada 8 endpoint dengan 15 payload (total 120 aksi, 1585 request). Subset 2 endpoint bersama yang sama dengan ZAP: 1223 request, 10 kerentanan. ZAP memakai 1585 request termasuk spider dan active scan pada 2 URL. ZAP unggul dalam variasi attack; Q-Learning unggul dalam efisiensi per request.",
+    "conclusion": "Pada 2 endpoint yang sama, Q-Learning mendeteksi 10 kerentanan dalam 1223 request (122.3 req/vuln), sementara ZAP mendeteksi 2 dalam 1585 request (792.5 req/vuln). Q-Learning 6.5x lebih efisien per request. Q-Learning cocok untuk continuous pentesting yang adaptif dan efisien; ZAP cocok untuk comprehensive one-time scanning."
   },
   "limitations": [
     "ZAP controlled scan memindai 2 endpoint dengan request spider + active scan; Q-Learning memakai payload terarah, sehingga metrik request tidak sebanding langsung.",
-    "Deteksi Q-Learning berbasis signature response (error/reflection/significant change) dengan verifikasi benign 'hello'; bukan eksploitasi nyata sehingga tetap berpotensi false positive.",
+    "Kerentanan ZAP yang dihitung hanya alert kategori sqli/xss/path berisiko High/Medium; alert lainnya (CSP header, cross-domain misconfiguration, teknologi, timestamp) tidak dihitung karena berada di luar cakupan analyzer.",
+    "Deteksi Q-Learning berbasis response analyzer dengan verifikasi kontrol-diferensial (benign + mutant) dan eksekusi DOM di browser headless untuk XSS.",
     "total_requests Q-Learning hanya menghitung request payload; request verifikasi benign (verification_requests) dan probe baseline (baseline_probe_requests) dicatat terpisah.",
-    "'requests_per_vulnerability' dan 'precision' mengikuti definisi Tugas Akhir (detection rate = total_vuln / total_requests), bukan metrik Precision/Recall ML."
+    "'requests_per_vulnerability' dan 'vuln_hit_rate' mengikuti definisi Tugas Akhir (vuln_hit_rate = total_vuln / total_requests), bukan metrik Precision/Recall ML. Metrik detektor yang tidak circular (precision/recall/F1 vs oracle manual) dihasilkan oleh benchmark_detector.py, terpisah dari perbandingan ini.",
+    "Seluruh metrik Q-Learning di laporan ini bersifat in-sample: dihitung dari episode yang sama dengan fase training, bukan dari evaluasi held-out."
   ]
 }

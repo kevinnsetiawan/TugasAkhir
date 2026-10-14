@@ -95,42 +95,113 @@ def plot_qtable_heatmap(qtable, agent):
         print("[-] No Q-Table to visualize")
         return
 
-    states = list(qtable.keys())
-    sample_actions = len(next(iter(qtable.values())))
-    n_actions = len(ACTION_NAMES)
-    action_labels = [_action_label(i, n_actions) for i in range(sample_actions)]
-    data = np.array([qtable[s] for s in states])
+    states      = list(qtable.keys())
+    n_actions   = len(ACTION_NAMES)
+    n_states    = len(states)
+    data        = np.array([qtable[s] for s in states])   # shape (n_states, 120)
+    n_cols      = data.shape[1]
 
-    fig, ax = plt.subplots(figsize=(12, max(4, len(states) * 0.6)))
-    cmap = LinearSegmentedColormap.from_list("gr", ["#ffcccc", "#ffffff", "#99cc99"], N=256)
+    # ── 1. NORMALISASI WARNA: pakai log-scale agar gradasi Q kecil tetap terlihat
+    # Q-value range: optimistic_init=5, reward_vuln=50+bonus → max ~60
+    # Geser ke ≥0 sebelum log (min bisa −5)
+    shift      = abs(data.min()) + 1          # pastikan semua positif
+    data_pos   = data + shift                  # semua ≥ 1
+    data_log   = np.log1p(data_pos)            # log(1 + x) smooth di dekat 0
 
-    im = ax.imshow(data, cmap=cmap, aspect="auto", vmin=-5, vmax=60)
+    cmap = LinearSegmentedColormap.from_list(
+        "rl_heatmap",
+        ["#f7f7f7", "#a8d5a2", "#2e8b57", "#1a4d2e"],   # putih → hijau muda → hijau tua
+        N=512,
+    )
 
-    ax.set_xticks(range(len(action_labels)))
-    ax.set_xticklabels(action_labels, rotation=45, ha="right", fontsize=9)
-    ax.set_yticks(range(len(states)))
-    ax.set_yticklabels([_humanize_state(s) for s in states], fontsize=9)
+    # ── 2. UKURAN CANVAS: lebar proporsional dengan jumlah aksi
+    fig_w = max(28, n_cols * 0.22)
+    fig_h = max(6,  n_states * 0.55)
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h))
 
-    for i in range(len(states)):
-        for j in range(len(action_labels)):
-            val = data[i, j]
-            color = "white" if 10 < val < 40 else "black"
-            ax.text(j, i, f"{val:.1f}", ha="center", va="center", fontsize=7, color=color)
+    im = ax.imshow(data_log, cmap=cmap, aspect="auto")
 
-    ax.set_title("Q-Table Heatmap: Learned Action Values per State",
-                 fontsize=13, fontweight="bold")
-    fig.colorbar(im, ax=ax, label="Q-Value", shrink=0.8)
+    # ── 3. SUMBU X: tampilkan hanya setiap 5 aksi, label pendek "ep{ep}\n{payload}"
+    x_tick_positions = list(range(0, n_cols, 5))
+    x_tick_labels    = []
+    for idx in x_tick_positions:
+        ep      = idx // n_actions
+        pl_idx  = idx % n_actions
+        pl_name = ACTION_NAMES[pl_idx] if pl_idx < len(ACTION_NAMES) else str(pl_idx)
+        # Potong nama payload agar tidak terlalu panjang
+        short   = pl_name.replace("sqli_", "sqli:").replace("xss_", "xss:") \
+                         .replace("lfi_", "lfi:").replace("fuzz_", "fuzz:")
+        x_tick_labels.append(f"a{idx}\n{short}\n@ep{ep}")
+
+    ax.set_xticks(x_tick_positions)
+    ax.set_xticklabels(x_tick_labels, fontsize=7.5, ha="center")
+
+    # ── 4. SUMBU Y: label state yang lebih ringkas
+    y_labels = [_short_state(s) for s in states]
+    ax.set_yticks(range(n_states))
+    ax.set_yticklabels(y_labels, fontsize=8.5)
+
+    # ── 5. TANPA ANNOTASI ANGKA DI DALAM SEL (annot=False equivalent)
+    #       Hanya tandai sel dengan Q-value tertinggi per state
+    for i in range(n_states):
+        best_j = int(np.argmax(data[i]))
+        best_v = data[i, best_j]
+        ax.add_patch(plt.Rectangle(
+            (best_j - 0.5, i - 0.5), 1, 1,
+            fill=False, edgecolor="red", linewidth=1.5, zorder=3,
+        ))
+        ax.text(
+            best_j, i, f"{best_v:.1f}",
+            ha="center", va="center", fontsize=7, fontweight="bold",
+            color="white", zorder=4,
+        )
+
+    # ── 6. COLORBAR dengan skala asli (bukan log) sebagai tick reference
+    cb = fig.colorbar(im, ax=ax, shrink=0.7, pad=0.02)
+    cb.set_label("Q-Value (log-scaled)", fontsize=9)
+    # Tambahkan tick referensi di nilai Q asli yang penting
+    ref_vals   = [-5, 0, 5, 10, 20, 35, 50, 60]
+    ref_log    = [np.log1p(v + shift) for v in ref_vals]
+    cb.set_ticks(ref_log)
+    cb.set_ticklabels([str(v) for v in ref_vals], fontsize=8)
+
+    ax.set_xlabel("Action Index  (setiap 5 aksi ditampilkan; sel merah = nilai Q tertinggi per state)",
+                  fontsize=9, labelpad=8)
+    ax.set_ylabel("State", fontsize=10, labelpad=6)
+    ax.set_title(
+        "Heatmap Nilai Q pada Pasangan State–Action  (Q-Learning, 1585 Episode)\n"
+        "Warna hijau tua = Q-Value tinggi (aksi produktif) · Warna putih = Q-Value rendah/optimistic init",
+        fontsize=11, fontweight="bold", pad=12,
+    )
+
     fig.tight_layout()
     filename = f"q_table_heatmap_{agent}.png"
-    fig.savefig(FIGURES_DIR / filename, dpi=150)
+    fig.savefig(FIGURES_DIR / filename, dpi=150, bbox_inches="tight")
     plt.close(fig)
     print(f"[+] Saved figures/{filename}")
 
 
-def _action_label(idx, max_idx):
-    base = ACTION_NAMES[idx % len(ACTION_NAMES)]
-    ep = idx // len(ACTION_NAMES)
+def _short_state(key):
+    """Label state ringkas untuk sumbu Y heatmap."""
+    parts = str(key).strip("()").split("|")
+    if len(parts) == 8:
+        status, lcat, err, refl, vuln, ep, rt, ct = parts
+        flags = []
+        if err  == "1": flags.append("ERR")
+        if refl == "1": flags.append("REFL")
+        if vuln == "1": flags.append("VULN")
+        flag_str = "+" + "+".join(flags) if flags else ""
+        return f"HTTP-{status} L{lcat} ep{ep}{flag_str}"
+    return key
+
+
+def _action_name(idx, n_actions):
+    """Nama aksi ringkas: payload@ep untuk print_qtable_analysis."""
+    ep      = idx // n_actions
+    pl_idx  = idx % n_actions
+    base    = ACTION_NAMES[pl_idx] if pl_idx < len(ACTION_NAMES) else str(pl_idx)
     return f"{base}@ep{ep}"
+
 
 
 def print_qtable_analysis(qtable):
@@ -147,41 +218,29 @@ def print_qtable_analysis(qtable):
         values_arr = np.array(values)
         best_idx = int(np.argmax(values_arr))
         best_val = values_arr[best_idx]
-        best_action = _action_label(best_idx, n_actions)
+        best_action = _action_name(best_idx, n_actions)
 
         print(f"\n  State: {label}")
         print(f"  {'-' * 50}")
         sorted_idx = np.argsort(values_arr)[::-1]
         for rank, idx in enumerate(sorted_idx[:5], 1):
             if values_arr[idx] > 0:
-                print(f"    {rank}. {_action_label(idx, n_actions):>20} -> Q = {values_arr[idx]:>8.2f}")
+                print(f"    {rank}. {_action_name(idx, n_actions):>20} -> Q = {values_arr[idx]:>8.2f}")
         print(f"    -> Optimal: {best_action} (Q={best_val:.2f})")
 
 
 def print_summary_table(log_df, summary, qtable):
-    total_req = len(log_df)
-    total_vuln = summary.get("total_vulnerabilities", 0)
-    det_rate = total_vuln / total_req * 100 if total_req else 0
-    req_per_vuln = round(total_req / total_vuln, 2) if total_vuln else float("inf")
-    cum_reward = summary.get("cumulative_reward", 0)
-    states_visited = len(qtable) if qtable else 0
-
-    print("\n" + "=" * 70)
-    print("  RINGKASAN HASIL PENTEST")
-    print("=" * 70)
-    print(f"  {'Total HTTP Requests (payload)':40} {total_req}")
-    print(f"  {'Total Vulnerabilities':40} {total_vuln}")
-    print(f"  {'Detection Rate':40} {det_rate:.1f}%")
-    print(f"  {'Requests per Vulnerability':40} {req_per_vuln}")
-    print(f"  {'Cumulative Reward':40} {cum_reward}")
-    print(f"  {'States Visited (Q-Table)':40} {states_visited}")
-    print(f"  {'SQL Injection':40} {summary.get('sql_injection', 0)}")
-    print(f"  {'Reflected XSS':40} {summary.get('reflected_xss', 0)}")
-    print(f"  {'Fuzzing Anomaly':40} {summary.get('fuzzing_anomaly', 0)}")
-    print(f"  {'Verification Requests':40} {summary.get('verification_requests', 0)}")
-    print(f"  {'Baseline Probe Requests':40} {summary.get('baseline_probe_requests', 0)}")
-    print(f"  {'Total w/ Verification':40} {summary.get('total_requests_with_verification', total_req)}")
-    print("=" * 70)
+    """Cetak tabel ringkasan hasil (dipanggil dari visualize_results.py)."""
+    import sys
+    sys.path.insert(0, "rl_pentest")
+    import cyber_output as cyber
+    cyber.init()
+    records = log_df.to_dict("records")
+    agent_label = summary.get("agent_type", "UNKNOWN").upper()
+    
+    cyber.table_vuln_findings(records)
+    cyber.table_per_endpoint(records, n_endpoints=8)
+    cyber.table_summary(agent_label, summary, records)
 
 
 def main():
