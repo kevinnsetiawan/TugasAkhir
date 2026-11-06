@@ -1,6 +1,6 @@
 \chapter{Hasil Implementasi dan Pembahasan}
 
-Bab ini menyajikan hasil implementasi, evaluasi empiris, dan analisis mendalam sistem \textit{automated web penetration testing} berbasis \textit{Reinforcement Learning} (RL) yang telah dirancang pada Bab 3. Pengujian difokuskan pada evaluasi performa dua algoritma pemelajaran penguatan, yaitu algoritma tabular \textit{Q-Learning} dan algoritma aproksimasi fungsi mendalam \textit{Deep Q-Network} (DQN), terhadap aplikasi target \textit{OWASP Juice Shop}. Selain itu, bab ini juga menyajikan evaluasi detektor terhadap \textit{ground truth} hasil kurasi manual untuk memutus sirkularitas metrik, analisis mekanisme gerbang kualitas eksploitasi nyata, dinamika transisi eksplorasi-eksploitasi, perbandingan komparatif mendalam Q-Learning terhadap DQN, serta perbandingan efisiensi \textit{apples-to-apples} dengan pemindai kerentanan konvensional \textit{OWASP ZAP}.
+Bab ini menyajikan hasil implementasi, evaluasi empiris, dan analisis sistem \textit{automated web penetration testing} berbasis \textit{Reinforcement Learning} (RL) yang telah dirancang pada Bab 3. Pengujian difokuskan pada evaluasi algoritma tabular \textit{Q-Learning} (\cite{watkins1992qlearning,sutton2018}) dan algoritma aproksimasi fungsi mendalam \textit{Deep Q-Network} (DQN) (\cite{mnih2015dqn}) terhadap aplikasi target \textit{OWASP Juice Shop} (\cite{owaspJuiceShop}). Selain itu, bab ini menyajikan evaluasi detektor terhadap \textit{ground truth} hasil kurasi manual, analisis gerbang kualitas eksploitasi, dinamika eksplorasi-eksploitasi, perbandingan Q-Learning dengan DQN, serta perbandingan terbatas dengan pemindai kerentanan \textit{OWASP ZAP}.
 
 \section{Pengumpulan dan Pengolahan Data}
 
@@ -8,16 +8,16 @@ Tahap pengumpulan dan pengolahan data merupakan landasan empiris dalam mengevalu
 
 \subsection{Prosedur Pengumpulan Data Eksperimen}
 
-Pengumpulan data dilakukan secara otomatis melalui interaksi terprogram antara sistem pengetesan penetrasi dengan aplikasi target \textit{OWASP Juice Shop} v20.2.0 pada lingkungan lokal terisolasi (\texttt{http://localhost:3000}). Data yang dikumpulkan bersumber dari empat instrumen pengujian:
+Pengumpulan data dilakukan secara otomatis melalui interaksi terprogram antara sistem pengetesan penetrasi dengan aplikasi target \textit{OWASP Juice Shop} v20.2.0 (\cite{owaspJuiceShop}) pada lingkungan lokal terisolasi (\texttt{http://localhost:3000}). Data yang dikumpulkan bersumber dari empat instrumen pengujian:
 \begin{enumerate}
-    \item \textbf{Data Penyelidikan Baseline (\textit{Baseline Probing Data}):} Sebelum fase pelatihan dimulai, sistem mengirimkan satu permintaan HTTP berstatus netral (\texttt{"hello"}) ke setiap \textit{endpoint} (total 8 transaksi). Data respons (khususnya ukuran panjang badan respons dalam satuan byte) direkam untuk membentuk nilai acuan awal (\textit{endpoint baseline length}).
+    \item \textbf{Data Penyelidikan Baseline (\textit{Baseline Probing Data}):} Sebelum fase pelatihan dimulai, sistem mengirimkan satu permintaan HTTP berstatus netral (\texttt{"hello"}) ke setiap \textit{endpoint} (total 8 transaksi). Panjang teks respons terdekode, yang dihitung dalam satuan karakter, direkam untuk membentuk nilai acuan awal (\textit{endpoint baseline length}).
     \item \textbf{Data Transaksi Pelatihan Reinforcement Learning:} Pengumpulan data primer dilakukan selama $1.585$ episode pengujian per agen (total $3.170$ transaksi muatan uji untuk Q-Learning dan DQN). Pada setiap episode, agen mentransmisikan satu muatan uji terpilih melalui modul \texttt{HTTPClient}, lalu mencatat seluruh metadata respons server yang diterima.
     \item \textbf{Data Verifikasi Kualitas Eksploitasi:} Setiap kali terdeteksi indikasi kerentanan aktif, sistem secara otomatis merekam data transaksi tambahan:
     \begin{itemize}
         \item Untuk SQL Injection dan Fuzzing, modul pengujian mengirimkan probe kontrol netral dan mutan ternetralkan (tercatat 47 transaksi verifikasi pada Q-Learning dan 43 transaksi pada DQN). 
         \item Untuk XSS, modul \texttt{BrowserVerifier} memuat peramban \textit{Playwright Chromium} tanpa antarmuka untuk mengeksekusi muatan pada DOM (tercatat 30 kali navigasi peramban pada Q-Learning dan 28 kali pada DQN). 
     \end{itemize}
-    \item \textbf{Data Pemindaian Pembanding OWASP ZAP:} Data pembanding diperoleh dari eksekusi pemindaian terkontrol (\textit{controlled scan}) menggunakan OWASP ZAP v2.15 pada dua \textit{endpoint} bersama (\texttt{/rest/products/search?q=} dan \texttt{/ftp/}). Seluruh riwayat pesan HTTP (1.585 pesan) dan daftar peringatan keamanan (\textit{alerts}) diekstraksi melalui antarmuka \textit{ZAP Core API}.
+    \item \textbf{Data Pemindaian Pembanding OWASP ZAP:} Data pembanding diperoleh dari eksekusi pemindaian terkontrol (\textit{controlled scan}) menggunakan OWASP ZAP pada dua \textit{endpoint} bersama (\texttt{/rest/products/search?q=} dan \texttt{/ftp/}). Seluruh riwayat pesan HTTP dan daftar peringatan keamanan (\textit{alerts}) diekstraksi melalui antarmuka \textit{ZAP Core API} (\cite{owaspZapApi}).
 \end{enumerate}
 
 Seluruh data transaksi interaksi agen dicatat secara serial dan persisten ke dalam berkas log terstruktur berformat \textit{Comma-Separated Values} (\texttt{log\_ql.csv} dan \texttt{log\_dqn.csv}). Tabel \ref{tab:skema_log} merangkum skema atribut data yang direkam pada setiap episode pengujian.
@@ -52,6 +52,49 @@ Seluruh data transaksi interaksi agen dicatat secara serial dan persisten ke dal
 \hline
 \end{tabular}
 \end{table}
+
+\subsection{Alur Input, Proses, dan Output Sistem}
+
+Untuk memperjelas aliran data pada sistem, setiap tahap implementasi dirinci berdasarkan masukan, proses yang dilakukan, dan keluaran yang diteruskan ke tahap berikutnya. Dengan demikian, proses pengujian dapat ditelusuri dari konfigurasi awal hingga terbentuknya metrik evaluasi. Tabel \ref{tab:alur_input_output} merangkum alur tersebut.
+
+\begin{table}[htbp]
+\centering
+\caption{Alur Input, Proses, dan Output Sistem Pengetesan Penetrasi}
+\label{tab:alur_input_output}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}
+>{\raggedright\arraybackslash}p{1.7cm}
+>{\raggedright\arraybackslash}p{2.8cm}
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}p{2.6cm}
+@{}}
+\toprule
+\textbf{Tahap} & \textbf{Input} & \textbf{Proses} & \textbf{Output} \\
+\midrule
+Baseline & Delapan endpoint dan payload netral \texttt{hello}. & Kirim satu request netral ke tiap endpoint, lalu ukur panjang teks respons. & Nilai baseline untuk tiap endpoint. \\
+\addlinespace[2pt]
+State & State awal \texttt{(2xx, 1, 0, 0, 0, 0, 0, 0)} atau state episode sebelumnya. & Q-Learning memakai tuple diskrit; DQN mengubahnya menjadi vektor \textit{one-hot} 28 dimensi. & State $s_t$ sebagai masukan agen. \\
+\addlinespace[2pt]
+Pemilihan aksi & $s_t$, nilai Q atau keluaran jaringan DQN, $\epsilon$, dan aksi yang sudah terverifikasi. & Agen memilih aksi dengan $\epsilon$-greedy. Aksi $a$ dipetakan ke endpoint $\lfloor a/15\rfloor$ dan payload $a\bmod15$; hanya aksi terverifikasi yang di-mask. & Aksi $a$ (0--119), endpoint, dan payload. \\
+\addlinespace[2pt]
+Pengiriman request & Endpoint, metode HTTP, payload, dan konfigurasi parameter atau body. & \texttt{HTTPClient} menyusun lalu mengirim request. Untuk feedback, CAPTCHA diambil dari \texttt{/rest/captcha}. & Respons berisi status, teks, header, dan waktu; atau penanda galat koneksi. \\
+\addlinespace[2pt]
+Analisis respons & Respons, payload, endpoint, baseline, dan permukaan serang. & \texttt{ResponseAnalyzer} menghitung fitur respons dan menentukan kandidat kerentanan sesuai aturan endpoint. & Fitur respons dan klasifikasi awal. \\
+\addlinespace[2pt]
+Verifikasi temuan & Kandidat; probe netral dan mutan untuk SQLi/fuzzing; payload dan halaman SPA untuk XSS. & SQLi/fuzzing diuji dengan kontrol diferensial. XSS diuji di Chromium; payload harus mengeksekusi \textit{canary} DOM, sementara kontrolnya tidak. & Kelas akhir, status \texttt{verified}, kandidat yang ditolak, dan jumlah probe/navigasi verifikasi. \\
+\addlinespace[2pt]
+Reward dan state berikutnya & Hasil analisis, status verifikasi, serta endpoint yang diuji. & Tentukan reward dasar, tambahkan bonus panjang bila berlaku, lalu bentuk state berikutnya dari delapan fitur. & Reward $r_t$ dan state $s_{t+1}$. \\
+\addlinespace[2pt]
+Pembaruan dan log & Transisi $(s_t,a_t,r_t,s_{t+1})$ dan metadata request. & Q-Learning memperbarui nilai state-aksi. DQN menyimpan transisi di \textit{replay buffer} dan memperbarui jaringan. Catat satu baris per episode. & Nilai agen yang diperbarui dan rekaman CSV. \\
+\addlinespace[2pt]
+Agregasi hasil & Log Q-Learning/DQN; untuk benchmark, 120 aksi dan label \textit{ground truth}. & Hitung metrik log. Benchmark membandingkan keluaran detektor dengan label secara terpisah dari agen RL. & Ringkasan JSON; benchmark menghasilkan confusion matrix, precision, recall, dan F1. Metrik pelatihan bersifat \textit{in-sample}. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Secara ringkas, aliran satu episode adalah: state saat ini $\rightarrow$ aksi endpoint-payload $\rightarrow$ request dan respons HTTP $\rightarrow$ analisis serta verifikasi $\rightarrow$ reward dan state berikutnya $\rightarrow$ pembaruan agen dan pencatatan log. Keluaran suatu tahap menjadi masukan tahap selanjutnya. Proses berulang hingga seluruh anggaran 1.585 episode selesai; keberhasilan suatu temuan tidak menghentikan pelatihan lebih awal.
 
 \subsection{Pengolahan Data dan Ekstraksi Fitur Respons}
 
@@ -143,7 +186,7 @@ di mana $\text{bonus\_panjang} \in \{0, 0, 5, 10\}$ diberikan berdasarkan katego
 Untuk mencegah pelaporan positif palsu (\textit{false positive}), sistem menerapkan dua lapis gerbang verifikasi kualitas eksploitasi (\textit{quality gate}):
 \begin{enumerate}
     \item \textbf{Verifikasi Kontrol-Diferensial (\textit{Control-Differential Verification}):} Diterapkan pada kandidat kerentanan SQL Injection dan \textit{Fuzzing}. Setiap kandidat temuan diuji silang terhadap dua probe kontrol tambahan: probe netral \texttt{"hello"} dan probe mutan ternetralkan (\texttt{neutralize\_payload}). Temuan hanya disahkan terverifikasi apabila \textbf{kedua kontrol tersebut tidak memicu ulang indikasi kerentanan yang sama}. Apabila salah satu kontrol mereproduksi respons anomali serupa, temuan didegradasi menjadi anomali ($+10$) dan ditolak sebagai kerentanan aktif. Koneksi yang gagal pada kontrol diperlakukan sebagai penolakan (\texttt{verified = False}).
-    \item \textbf{Verifikasi Eksekusi DOM Peramban Sejati (\textit{Browser Execution Verification}):} Diterapkan khusus pada kerentanan XSS. Kehadiran fragmen HTML pada badan respons HTTP semata \textbf{bukan bukti keberadaan XSS}: jalur \texttt{/rest/track-order/} merespons dengan JSON murni sehingga skrip tidak akan pernah dieksekusi oleh peramban. Modul \texttt{BrowserVerifier} berbasis Playwright Chromium memuat halaman frontend Angular SPA (\texttt{/\#/search} atau \texttt{/\#/track-result}), menyuntikkan muatan uji yang diinstrumentasi dengan \textit{canary token} (\texttt{window.\_\_RLP\_XSS\_CANARY\_\_ = 1}), dan memvalidasi bahwa token tersebut benar-benar dieksekusi pada lingkungan DOM. Vektor XSS yang ternetralkan kemudian diuji sebagai kontrol; temuan hanya disahkan jika varian asli mengeksekusi canary sedangkan varian yang ternetralkan tidak. Navigasi awal (\textit{warmup}) dilakukan sekali agar aset SPA Angular terkisar sebelum evaluasi, mencegah eksekusi yang bersifat \textit{flaky} pada pemuatan pertama.
+    \item \textbf{Verifikasi Eksekusi DOM Peramban Sejati (\textit{Browser Execution Verification}):} Diterapkan khusus pada kerentanan XSS. Kehadiran fragmen HTML pada badan respons HTTP semata \textbf{bukan bukti keberadaan XSS}: jalur \texttt{/rest/track-order/} merespons dengan JSON murni sehingga skrip tidak akan dieksekusi oleh peramban. Modul \texttt{BrowserVerifier} berbasis Playwright Chromium memuat halaman frontend Angular SPA (\texttt{/\#/search} atau \texttt{/\#/track-result}), menyuntikkan muatan uji yang diinstrumentasi dengan \textit{canary token} (\texttt{window.\_\_RLP\_XSS\_CANARY\_\_ = 1}), dan memvalidasi bahwa token tersebut benar-benar dieksekusi pada lingkungan DOM. Pengujian peramban dilakukan menggunakan API navigasi dan eksekusi halaman Playwright (\cite{playwrightPageApi}). Vektor XSS yang ternetralkan kemudian diuji sebagai kontrol; temuan hanya disahkan jika varian asli mengeksekusi canary sedangkan varian yang ternetralkan tidak. Navigasi awal (\textit{warmup}) dilakukan sekali agar aset SPA Angular tersimpan di cache sebelum evaluasi, mencegah eksekusi yang bersifat \textit{flaky} pada pemuatan pertama.
 \end{enumerate}
 
 \subsection{Mekanisme Action Masking Tunggal (\textit{Single-Level Action Masking})}

@@ -260,7 +260,7 @@ Model \textit{Reinforcement Learning} dalam penelitian ini terdiri dari tiga kom
 
 \textit{Action} (A) merupakan aksi yang dilakukan oleh agen berupa pengiriman \textit{payload} ke aplikasi target. Payload yang digunakan dalam penelitian ini mencakup \textit{SQL Injection}, \textit{Reflected Cross-Site Scripting} (Reflected XSS), dan \textit{fuzzing}. Jenis XSS yang digunakan secara khusus adalah \textit{Reflected XSS}, bukan XSS secara umum, karena jenis serangan ini memberikan umpan balik yang lebih cepat dan terukur terhadap aksi yang dilakukan oleh agen. Pada Reflected XSS, payload dikirimkan melalui parameter URL atau input form, kemudian sistem menganalisis apakah payload tersebut muncul kembali pada respons HTTP. Karakteristik ini sesuai dengan kebutuhan Q-Learning karena keberhasilan atau kegagalan aksi dapat dievaluasi secara langsung melalui respons dari aplikasi target.
 
-Sementara itu, \textit{reward} (R) diberikan sebagai umpan balik dari lingkungan. Nilai positif (+50) diberikan jika sistem berhasil menemukan indikasi kerentanan, misalnya ketika payload SQL Injection menghasilkan respons error tertentu atau ketika payload Reflected XSS berhasil muncul kembali pada isi respons HTTP tanpa proses sanitasi yang memadai. Sebaliknya, nilai negatif (-1) diberikan untuk setiap \textit{request} yang tidak menghasilkan temuan kerentanan. Selain itu, untuk mendukung proses pembelajaran, Q-Table direpresentasikan dalam bentuk struktur data seperti \textit{dictionary} dengan pasangan kunci \textit{(state, action)} dan nilai berupa estimasi $Q(s,a)$. Penentuan \textit{reward} ini bertujuan untuk mendorong agen menemukan kerentanan secara efisien dengan jumlah \textit{request} yang minimal \cite{nguyen2023}.
+Sementara itu, \textit{reward} (R) diberikan sebagai umpan balik dari lingkungan. Nilai $+50$ diberikan untuk kerentanan yang lolos verifikasi, sedangkan nilai $+10$ diberikan untuk indikasi anomali yang belum terkonfirmasi. Respons normal memperoleh nilai $-1$, dan kegagalan permintaan memperoleh nilai $-5$. Refleksi payload saja tidak cukup untuk mengesahkan XSS; kandidat XSS diverifikasi melalui eksekusi pada DOM. Q-Table direpresentasikan dalam struktur data seperti \textit{dictionary} dengan pasangan kunci \textit{(state, action)} dan nilai berupa estimasi $Q(s,a)$. Skema ini mendorong agen mengutamakan temuan terverifikasi dan mengurangi aksi yang tidak produktif.
 
 Agar komponen \textit{state}, \textit{action}, \textit{reward}, dan Q-Table dapat diimplementasikan secara sistematis, penelitian ini merancang struktur data utama yang digunakan dalam proses pengujian dan pembelajaran agen.
 
@@ -484,25 +484,25 @@ Struktur data reward mengatur fungsi insentif agen melalui rincian pembobotan be
 
 \begin{enumerate}
     \item \textbf{Fungsi Utama:} Memberikan umpan balik kuantitatif (\textit{scalar feedback signal}) yang memandu agen memahami kualitas dari aksi yang baru saja diambil.
-    \item \textbf{Skema Insentif (+):} Memberikan \textit{reward} tinggi (+50 atau +10) apabila aksi berhasil memicu anomali, refleksi tanpa sanitasi, atau pesan kesalahan basis data (\textit{database error}).
+    \item \textbf{Skema Insentif (+):} Memberikan \textit{reward} +50 untuk kerentanan yang lolos verifikasi dan +10 untuk anomali yang belum terkonfirmasi.
     \item \textbf{Skema Penalti (-):} Memberikan \textit{reward} negatif (-1 atau -5) untuk meminimalkan aksi yang sia-sia, \textit{timeout}, kegagalan koneksi, atau request yang tidak membuahkan hasil temuan.
 \end{enumerate}
 
-Penentuan nilai numerik atau bobot tolak ukur pada komponen \textit{reward} dan penalti dalam penelitian ini didasarkan pada preseden pemodelan insentif dari beberapa penelitian \textit{automated penetration testing} terdahulu. Skala nilai $+50$ hingga $-5$ diterapkan untuk menjaga stabilitas nilai gradien pada Q-Table, mempercepat waktu konvergensi agen, serta memastikan agen dapat membedakan dengan jelas antara pencapaian target utama (\textit{goal state}), indikasi anomali (\textit{heuristic guidance}), dan kondisi galat teknis. Rincian bobot beserta dasar referensi ilmiah penentuan angka tersebut ditunjukkan pada Tabel \ref{tab:struktur_reward}.
+Nilai numerik pada fungsi \textit{reward} merupakan keputusan desain eksperimen. Skema ini membedakan kerentanan terverifikasi, anomali yang belum terkonfirmasi, respons normal, dan galat teknis. Rincian nilai serta dasar operasionalnya ditunjukkan pada Tabel \ref{tab:struktur_reward}.
 
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|p{7cm}|c|p{4.5cm}|}
 \hline
-\textbf{No} & \textbf{Kondisi} & \textbf{Nilai Reward} & \textbf{Dasar / Referensi} \\ \hline
+\textbf{No} & \textbf{Kondisi} & \textbf{Nilai Reward} & \textbf{Dasar Operasional} \\ \hline
 
-1 & Payload menunjukkan indikasi kerentanan, seperti SQL error atau payload XSS muncul kembali pada respons tanpa sanitasi yang memadai & +50 & \textit{Positive reinforcement} skala besar untuk eksploitasi \textit{goal state} \cite{erdodi2021} \\ \hline
+1 & Kandidat kerentanan lolos kontrol diferensial atau verifikasi eksekusi DOM & +50 & Insentif untuk temuan terverifikasi \\ \hline
 
-2 & Respons menunjukkan perubahan signifikan yang berpotensi mengarah pada kerentanan & +10 & \textit{Reward shaping} sebagai panduan heuristik arah serangan \cite{nguyen2020} \\ \hline
+2 & Respons menunjukkan anomali, tetapi kandidat belum lolos verifikasi & +10 & Umpan balik untuk indikasi yang belum terkonfirmasi \\ \hline
 
-3 & Request berhasil dikirim, tetapi tidak menghasilkan indikasi kerentanan & -1 & \textit{Step cost} dasar untuk mengoptimalkan efisiensi jumlah \textit{request} \cite{sutton2018} \\ \hline
+3 & Permintaan berhasil, tetapi tidak menghasilkan temuan atau anomali & -1 & Biaya untuk aksi normal \\ \hline
 
-4 & Request gagal, timeout, atau endpoint tidak dapat diakses & -5 & Penalti besar untuk menjaga aspek \textit{safety} interaksi agen \cite{zennaro2020} \\ \hline
+4 & Permintaan gagal, mengalami timeout, atau tidak dapat terhubung ke endpoint & -5 & Penalti untuk galat teknis \\ \hline
 
 \end{tabular}
 \caption{Struktur Pemberian Reward}
@@ -568,7 +568,7 @@ testing_log = [
 ]
 \end{verbatim}
 
-Struktur data ini membantu peneliti dalam mencatat setiap percobaan yang dilakukan oleh agen. Data yang tersimpan dalam testing log dapat digunakan untuk menghitung metrik evaluasi seperti jumlah kerentanan yang ditemukan, jumlah request, cumulative reward, dan precision.
+Struktur data ini membantu peneliti dalam mencatat setiap percobaan yang dilakukan oleh agen. Data yang tersimpan dalam testing log dapat digunakan untuk menghitung metrik evaluasi seperti jumlah kerentanan terverifikasi, jumlah request, cumulative reward, dan vuln hit rate.
 
 Berdasarkan struktur data yang telah dijelaskan, alur penggunaan data dalam sistem dimulai dari proses \textit{information gathering} untuk memperoleh endpoint, HTTP header, input field, dan mekanisme autentikasi. Selanjutnya, agen memilih action berupa kategori payload tertentu. Payload kemudian dikirimkan melalui HTTP request ke aplikasi OWASP Juice Shop. Respons yang diterima dianalisis oleh \textit{Response Analyzer} untuk membentuk state dan menentukan reward. Nilai reward tersebut digunakan untuk memperbarui Q-Table, sedangkan hasil pengujian disimpan ke dalam testing log untuk kebutuhan evaluasi.
 
@@ -579,7 +579,7 @@ Penelitian ini menggunakan algoritma Q-Learning untuk memperbarui nilai aksi sec
 Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma \max_{a'} Q(s',a') - Q(s,a) \right]
 \end{equation}
 
-Proses pembelajaran dilakukan dalam beberapa episode hingga nilai Q-Table menjadi stabil.
+Proses pembelajaran dijalankan selama anggaran episode yang telah ditetapkan untuk penelitian.
 
 \subsection{Pengaturan Hyperparameter Q-Learning}
 
@@ -590,11 +590,10 @@ Adapun rincian poin fungsi dari setiap hyperparameter yang digunakan adalah seba
 \begin{enumerate}
     \item \textbf{Learning Rate ($\alpha = 0.1$):} Menentukan seberapa besar nilai Q-Table diperbarui berdasarkan reward yang baru diterima agen. Nilai 0.1 dipilih agar agen dapat mengasimilasi pengetahuan baru secara bertahap tanpa menghapus pengalaman lama secara drastis.
     \item \textbf{Discount Factor ($\gamma = 0.9$):} Menentukan seberapa besar agen mempertimbangkan nilai estimasi \textit{reward} di masa depan (\textit{long-term reward}). Nilai yang tinggi membantu agen memilih langkah eksploitasi yang tidak hanya menguntungkan pada satu request, tetapi berdampak pada penemuan kerentanan di tahap berikutnya.
-    \item \textbf{Epsilon ($\epsilon = 1.0$):} Menentukan tingkat eksplorasi awal agen untuk memilih aksi secara acak. Nilai awal sebesar 1.0 memastikan bahwa pada episode-episode awal, agen akan aktif mencoba seluruh variasi kategori \textit{payload} pada \textit{endpoint} target.
+    \item \textbf{Epsilon ($\epsilon = 1.0$):} Menentukan tingkat eksplorasi awal agen. Nilai awal 1.0 membuat pemilihan aksi pada awal pelatihan sepenuhnya eksploratif, tetapi tidak menjamin setiap aksi dicoba dalam urutan tertentu.
     \item \textbf{Minimum Epsilon ($0.1$):} Menentukan batas bawah nilai eksplorasi. Nilai ini menjaga agar agen tetap memiliki peluang kecil (10\%) untuk melakukan eksplorasi acak demi menemukan pola anomali baru, meskipun model secara umum telah beralih ke mode eksploitasi nilai Q tertinggi.
-    \item \textbf{Epsilon Decay ($0.95$):} Mengatur laju penurunan nilai eksplorasi ($\epsilon$) secara eksponensial pada setiap akhir episode. Penurunan ini memfasilitasi transisi agen yang mulus dari fase pencarian acak (\textit{exploration}) menuju fase pemanfaatan jalur penetrasi terbaik (\textit{exploitation}).
-    \item \textbf{Jumlah Episode ($100$):} Menentukan total batasan iterasi siklus pembelajaran penuh yang diberikan kepada agen. Jumlah ini dirancang untuk memberikan waktu yang cukup bagi agen dalam membangun kematangan konvergensi nilai pada Q-Table.
-    \item \textbf{Maksimum Step per Episode ($50$):} Menentukan batas atas jumlah \textit{HTTP request} atau pengiriman \textit{payload} yang diizinkan dalam satu episode. Parameter ini berfungsi sebagai pembatas efisiensi agar sistem tidak terjebak dalam \textit{looping request} yang berlebihan pada satu \textit{endpoint}.
+    \item \textbf{Epsilon Decay ($0.90$):} Mengatur penurunan nilai eksplorasi ($\epsilon$) Q-Learning pada setiap episode. Nilai ini merupakan konfigurasi eksperimen yang mengatur transisi dari eksplorasi menuju eksploitasi.
+    \item \textbf{Jumlah Episode ($1.585$):} Menetapkan anggaran pelatihan penuh bagi setiap agen. Pelatihan dijalankan sampai seluruh episode selesai tanpa penghentian dini.
 \end{enumerate}
 
 \begin{table}[H]
@@ -607,28 +606,23 @@ Adapun rincian poin fungsi dari setiap hyperparameter yang digunakan adalah seba
 2 & Discount Factor ($\gamma$) & 0.9 & Menentukan seberapa besar agen mempertimbangkan reward jangka panjang dalam proses pengambilan keputusan. \\ \hline
 3 & Epsilon ($\epsilon$) & 1.0 & Menentukan tingkat eksplorasi awal agen dalam memilih aksi secara acak. \\ \hline
 4 & Minimum Epsilon & 0.1 & Menentukan batas minimum eksplorasi agar agen tetap memiliki peluang kecil untuk mencoba aksi lain. \\ \hline
-5 & Epsilon Decay & 0.95 & Mengatur penurunan nilai epsilon pada setiap episode agar agen secara bertahap berpindah dari eksplorasi menuju eksploitasi. \\ \hline
-6 & Jumlah Episode & 100 & Menentukan jumlah iterasi pembelajaran yang dilakukan oleh agen selama proses pengujian. \\ \hline
-7 & Maksimum Step per Episode & 50 & Menentukan batas jumlah aksi atau request yang dapat dilakukan agen dalam satu episode. \\ \hline
+5 & Epsilon Decay Q-Learning & 0.90 & Mengatur penurunan nilai epsilon Q-Learning pada setiap episode. \\ \hline
+6 & Jumlah Episode per Agen & 1.585 & Anggaran pelatihan penuh; tidak menggunakan penghentian dini. \\ \hline
 
 \end{tabular}
 \caption{Pengaturan Hyperparameter Q-Learning}
 \label{tab:hyperparameter_qlearning}
 \end{table}
 
-Nilai hyperparameter tersebut digunakan sebagai konfigurasi awal dalam proses pengujian. Pada tahap implementasi, nilai tersebut dapat disesuaikan melalui proses percobaan untuk melihat pengaruhnya terhadap performa agen. Evaluasi dilakukan dengan membandingkan hasil pengujian berdasarkan jumlah kerentanan yang ditemukan, jumlah \textit{request}, waktu pengujian, \textit{precision}, dan \textit{cumulative reward}. Dengan demikian, pengaturan hyperparameter tidak hanya berfungsi sebagai konfigurasi teknis, tetapi juga menjadi bagian dari mekanisme untuk menguji apakah pendekatan Q-Learning mampu meningkatkan adaptivitas dan efisiensi dibandingkan dengan metode pengujian konvensional.
+Nilai hyperparameter tersebut merupakan konfigurasi penelitian, bukan klaim bahwa nilai tersebut optimal untuk semua lingkungan. Evaluasi membandingkan jumlah kerentanan terverifikasi, jumlah \textit{request}, waktu pengujian, dan \textit{cumulative reward}. Q-Learning dan DQN masing-masing menjalani 1.585 episode, tetapi menggunakan jadwal eksplorasi yang berbeda sesuai konfigurasi algoritmanya.
 
-Pemilihan nilai hyperparameter pada penelitian ini tidak dilakukan secara acak, melainkan mengacu pada karakteristik umum implementasi Q-Learning pada penelitian \textit{reinforcement learning} dan \textit{automated penetration testing}. Nilai \textit{learning rate} sebesar $\alpha = 0.1$ dipilih karena mampu memberikan keseimbangan antara kecepatan pembelajaran dan stabilitas konvergensi Q-Table. Beberapa penelitian Q-Learning terbaru menunjukkan bahwa rentang $\alpha$ antara 0.01 hingga 0.5 umum digunakan untuk menjaga stabilitas proses pembelajaran agen tanpa menyebabkan perubahan nilai Q yang terlalu agresif \cite{becker2024evaluation,sensors2025rlpentest}.
+Nilai \textit{learning rate} Q-Learning ditetapkan sebesar $\alpha = 0.1$ dan \textit{discount factor} sebesar $\gamma = 0.9$. Kedua nilai tersebut mengatur besarnya pembaruan estimasi aksi dan bobot \textit{reward} masa depan dalam persamaan Q-Learning (\cite{watkins1992qlearning,sutton2018}). Nilai yang digunakan merupakan konfigurasi eksperimen dan tidak dimaksudkan sebagai rentang optimal universal.
 
-Selanjutnya, nilai \textit{discount factor} sebesar $\gamma = 0.9$ digunakan karena sesuai untuk skenario pengambilan keputusan berurutan seperti \textit{penetration testing}, di mana keberhasilan eksploitasi pada suatu langkah dapat memengaruhi peluang keberhasilan pada tahap berikutnya. Penelitian sebelumnya menunjukkan bahwa rentang $\gamma$ antara 0.9 hingga 0.99 efektif digunakan untuk mendorong agen mempertimbangkan \textit{long-term reward} dibandingkan hanya \textit{reward} jangka pendek \cite{liu2024hrl,yi2023drl}.
+Nilai awal eksplorasi Q-Learning adalah $\epsilon = 1.0$ dengan batas minimum $0.1$ dan peluruhan $0.90$ per episode. DQN menggunakan jadwal eksplorasi tersendiri dengan peluruhan $0.9965$ agar eksplorasi berlangsung lebih lama selama pelatihan berbasis aproksimasi fungsi. Pengaturan ini mengikuti konfigurasi masing-masing agen dan tidak dimaksudkan sebagai perbandingan hyperparameter satu-banding-satu.
 
-Pada aspek eksplorasi, nilai awal epsilon sebesar $\epsilon = 1.0$ dipilih agar agen melakukan eksplorasi penuh pada fase awal pembelajaran. Strategi ini banyak digunakan dalam penelitian Q-Learning modern untuk mencegah agen terjebak pada pola aksi tertentu sejak awal pelatihan \cite{becker2024evaluation,sensors2025rlpentest}. Selain itu, penggunaan \textit{minimum epsilon} sebesar 0.1 bertujuan menjaga kemampuan agen dalam menemukan pola kerentanan baru meskipun proses pembelajaran telah mendekati konvergensi.
+Setiap agen dilatih selama 1.585 episode tanpa penghentian dini. Pada setiap episode, agen memilih satu aksi payload; permintaan baseline dan verifikasi temuan dicatat terpisah dari anggaran payload. Definisi umum pembelajaran berbasis reward dan pembaruan nilai aksi mengikuti formulasi Q-Learning (\cite{watkins1992qlearning,sutton2018}), sedangkan penelitian penetration testing berbasis RL menunjukkan bahwa konfigurasi lingkungan dan ruang aksi memengaruhi proses eksplorasi agen (\cite{ghanem2023hrl,zennaro2023}).
 
-Parameter \textit{epsilon decay} sebesar 0.95 digunakan untuk menghasilkan transisi eksplorasi menuju eksploitasi secara bertahap. Nilai ini dipilih karena mampu mempertahankan keseimbangan antara pencarian aksi baru dan pemanfaatan pengalaman sebelumnya. Beberapa penelitian terbaru menunjukkan bahwa penurunan epsilon yang terlalu cepat dapat menyebabkan agen kehilangan peluang eksplorasi terhadap jalur serangan alternatif \cite{sensors2025rlpentest,becker2024evaluation}.
-
-Jumlah episode sebanyak 100 dipilih sebagai konfigurasi awal agar agen memiliki cukup iterasi untuk membangun pola pembelajaran pada lingkungan pengujian tanpa menghasilkan waktu komputasi yang terlalu besar. Sementara itu, batas maksimum 50 langkah per episode digunakan untuk menjaga efisiensi proses pengujian dan mencegah terjadinya \textit{looping request} berlebihan pada endpoint target \cite{ghanem2023hrl,yi2023drl}.
-
-Dengan demikian, konfigurasi hyperparameter yang digunakan dalam penelitian ini telah disusun berdasarkan praktik umum dan rekomendasi pada penelitian Q-Learning terbaru sehingga diharapkan mampu mendukung proses pembelajaran agen secara stabil, adaptif, dan efisien dalam skenario \textit{automated web penetration testing}.
+Konfigurasi hyperparameter tersebut menjadi dasar pelatihan dan pelaporan hasil eksperimen pada Bab 4. Kinerja agen kemudian dinilai berdasarkan temuan terverifikasi, jumlah permintaan, waktu pelatihan, dan \textit{cumulative reward}.
 
 \section{Rencana Pengujian}
 
@@ -648,7 +642,7 @@ Evaluasi dalam penelitian ini dilakukan menggunakan beberapa metrik utama untuk 
 
 Pengujian dalam penelitian ini dilakukan untuk membandingkan kinerja metode pengujian konvensional sebagai \textit{baseline} dengan sistem yang diusulkan berbasis \textit{Reinforcement Learning}. Perbandingan dilakukan untuk mengetahui sejauh mana pendekatan \textit{Q-Learning} mampu meningkatkan adaptivitas dan efisiensi dalam proses \textit{automated web penetration testing}.
 
-Objek pengujian yang digunakan adalah \textit{OWASP Juice Shop} yang dijalankan pada lingkungan lokal. Jenis kerentanan yang menjadi fokus pengujian meliputi \textit{SQL Injection}, \textit{Reflected Cross-Site Scripting} (Reflected XSS), dan \textit{basic fuzzing}. Hasil dari kedua skenario pengujian kemudian dibandingkan berdasarkan beberapa metrik, yaitu jumlah kerentanan yang ditemukan, jumlah \textit{request}, waktu pengujian, \textit{precision}, dan \textit{cumulative reward}.
+Objek pengujian yang digunakan adalah \textit{OWASP Juice Shop} yang dijalankan pada lingkungan lokal. Jenis kerentanan yang menjadi fokus pengujian meliputi \textit{SQL Injection}, \textit{Reflected Cross-Site Scripting} (Reflected XSS), dan \textit{basic fuzzing}. Hasil dari kedua skenario pengujian kemudian dibandingkan berdasarkan jumlah kerentanan terverifikasi, jumlah \textit{request}, waktu pengujian, \textit{vuln hit rate}, dan \textit{cumulative reward}.
 
 \subsubsection{Skenario A: Baseline Testing Menggunakan OWASP ZAP}
 

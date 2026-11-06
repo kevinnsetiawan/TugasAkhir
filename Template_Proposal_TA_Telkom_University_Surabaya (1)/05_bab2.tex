@@ -13,7 +13,7 @@ Proses \textit{penetration testing} umumnya terdiri dari beberapa tahap, yaitu:
     \item \textbf{\textit{Reporting}}: Pelaporan hasil pengujian.
 \end{enumerate}
 
-Pendekatan ini sangat penting dalam menjaga keamanan sistem, namun memiliki keterbatasan jika dilakukan secara manual, seperti tidak efisien dan bergantung pada keahlian penguji. \textit{Penetration testing} tidak hanya berfungsi sebagai metode identifikasi kerentanan, tetapi juga sebagai mekanisme evaluasi terhadap efektivitas sistem keamanan yang telah diterapkan. Dalam praktiknya, proses ini meniru pola serangan yang dilakukan oleh penyerang nyata sehingga mampu memberikan gambaran yang lebih realistis terhadap potensi risiko yang dihadapi oleh sistem. Oleh karena itu, pendekatan ini menjadi salah satu metode yang paling banyak digunakan dalam pengujian keamanan aplikasi web (\cite{behl2017}).
+Pendekatan ini sangat penting dalam menjaga keamanan sistem, namun memiliki keterbatasan jika dilakukan secara manual, seperti tidak efisien dan bergantung pada keahlian penguji. \textit{Penetration testing} tidak hanya berfungsi sebagai metode identifikasi kerentanan, tetapi juga sebagai mekanisme evaluasi terhadap efektivitas sistem keamanan yang telah diterapkan. Dalam praktiknya, proses ini meniru pola serangan yang dilakukan oleh penyerang nyata sehingga mampu memberikan gambaran yang lebih realistis terhadap potensi risiko yang dihadapi oleh sistem (\cite{singerfriedman2014}).
 
 \subsection{Vulnerability pada Aplikasi Web}
 
@@ -61,7 +61,7 @@ Secara teoritis, pemahaman mendalam terhadap mekanisme dan karakteristik dari se
 
 \subsection{Automated Penetration Testing}
 
-\textit{Automated penetration testing} merupakan metode pengujian keamanan sistem yang dilakukan secara otomatis menggunakan perangkat lunak atau \textit{tools} tertentu untuk mengidentifikasi kerentanan pada aplikasi, jaringan, maupun sistem informasi (\cite{kumar2024}). Pendekatan ini dikembangkan untuk meningkatkan efisiensi proses \textit{penetration testing} dibandingkan metode manual yang cenderung membutuhkan waktu lebih lama dan sangat bergantung pada kemampuan seorang \textit{penetration tester}. Dengan adanya otomatisasi, proses pengujian dapat dilakukan secara lebih cepat, konsisten, dan mampu menangani cakupan sistem yang lebih luas.
+\textit{Automated penetration testing} merupakan metode pengujian keamanan sistem yang menggunakan perangkat lunak untuk menjalankan rangkaian aktivitas pengujian dan mengidentifikasi kerentanan pada aplikasi atau jaringan. Sejumlah penelitian menerapkan pembelajaran penguatan untuk mengotomatisasi pengambilan keputusan selama pengujian penetrasi (\cite{ghanem2023hrl,zennaro2023}). Pendekatan ini ditujukan untuk mengurangi pekerjaan berulang, meskipun cakupan dan hasilnya bergantung pada lingkungan serta model pengujian yang digunakan.
 
 Pada umumnya, \textit{automated penetration testing} bekerja dengan melakukan serangkaian tahapan secara otomatis, mulai dari proses \textit{information gathering}, \textit{vulnerability scanning}, analisis celah keamanan, hingga simulasi eksploitasi terhadap kerentanan yang ditemukan. Beberapa \textit{tools} yang umum digunakan dalam pendekatan ini antara lain \textit{Nmap} untuk pemetaan jaringan, \textit{Nikto} untuk pengujian keamanan web server, serta \textit{OWASP ZAP} dan \textit{Burp Suite} untuk pengujian aplikasi web. Penggunaan \textit{tools} tersebut memungkinkan proses pengujian dilakukan secara berulang dengan hasil yang lebih konsisten dibandingkan pengujian manual.
 
@@ -73,7 +73,7 @@ Keterbatasan tersebut menyebabkan proses pengujian keamanan belum sepenuhnya opt
 
 \subsection{Machine Learning dalam Cybersecurity}
 
-\textit{Machine Learning} merupakan cabang dari kecerdasan buatan (\textit{Artificial Intelligence}) yang memungkinkan sistem komputer mempelajari pola dari data dan membuat keputusan tanpa harus diprogram secara eksplisit (\cite{mitchell1997,singh2024}). Pendekatan ini bekerja dengan memanfaatkan data historis untuk membangun model yang dapat mengenali pola tertentu, melakukan prediksi, maupun mengambil keputusan secara otomatis. Seiring meningkatnya kompleksitas sistem digital dan jumlah ancaman siber, \textit{machine learning} menjadi salah satu teknologi yang banyak diterapkan dalam bidang keamanan siber.
+\textit{Machine Learning} merupakan cabang dari kecerdasan buatan (\textit{Artificial Intelligence}) yang memungkinkan sistem komputer mempelajari pola dari data dan membuat keputusan tanpa harus diprogram secara eksplisit (\cite{mitchell1997}). Pendekatan ini bekerja dengan memanfaatkan data historis untuk membangun model yang dapat mengenali pola tertentu, melakukan prediksi, maupun mengambil keputusan secara otomatis. Seiring meningkatnya kompleksitas sistem digital dan jumlah ancaman siber, \textit{machine learning} menjadi salah satu teknologi yang banyak diterapkan dalam bidang keamanan siber.
 
 Dalam konteks \textit{cybersecurity}, \textit{machine learning} dimanfaatkan untuk mendeteksi anomali perilaku sistem, mengidentifikasi aktivitas mencurigakan, mengklasifikasikan jenis serangan, serta menganalisis log keamanan dalam jumlah besar secara otomatis. Teknologi ini mampu membantu proses identifikasi ancaman yang sulit dideteksi menggunakan metode konvensional berbasis aturan (\textit{rule-based}). Dengan mempelajari pola lalu lintas jaringan dan aktivitas pengguna, sistem dapat mengenali indikasi serangan seperti \textit{malware}, \textit{phishing}, \textit{Distributed Denial of Service} (DDoS), maupun upaya eksploitasi celah keamanan lainnya.
 
@@ -171,26 +171,24 @@ Pendekatan ini memungkinkan eksplorasi \textit{attack path} yang lebih luas dan 
 \hline
 \textbf{No} & \textbf{Judul Penelitian} & \textbf{Peneliti} & \textbf{Tahun} & \textbf{Kelebihan} & \textbf{Kekurangan} & \textbf{Hasil} \\ \hline
 
-1 & PentestGPT: Evaluating and Harnessing LLMs for Automated Pentesting & Deng et al. & 2023 & Otomatisasi berbasis AI modern & Tidak menggunakan RL & Efektivitas pentesting meningkat \\ \hline
+1 & PentestGPT: Evaluating and Harnessing Large Language Models for Automated Penetration Testing & Deng et al. \cite{deng2024pentestgpt} & 2024 & Menggunakan LLM untuk mengotomatisasi tahapan penetration testing & Tidak menggunakan RL dan diuji pada kumpulan skenario tertentu & Menunjukkan potensi LLM untuk membantu tugas penetration testing \\ \hline
 
-2 & Large Language Models in Cybersecurity: Opportunities & Khoury et al. & 2023 & Analisis AI komprehensif & Masih bersifat konseptual & Potensi besar pada automation \\ \hline
+2 & Deep Reinforcement Learning for Cyber Security & Nguyen dan Reddi \cite{nguyen2023} & 2023 & Merangkum penerapan DRL dalam keamanan siber & Bersifat survei dan tidak berfokus pada web penetration testing & Memetakan pendekatan DRL untuk pertahanan dan deteksi siber \\ \hline
 
-3 & AutoPentest: Automated Penetration Testing Using AI Planning & Zhang et al. & 2023 & Pendekatan berbasis AI planning & Tidak adaptif seperti RL & Efisiensi pentesting meningkat \\ \hline
+3 & Deep Q-Learning Based Reinforcement Learning Approach for Network Intrusion Detection & Alavizadeh et al. \cite{alavizadeh2022} & 2022 & Menerapkan deep Q-learning pada deteksi intrusi jaringan & Fokus pada deteksi, bukan eksploitasi atau penetration testing & Mengevaluasi pendekatan Q-learning untuk klasifikasi intrusi \\ \hline
 
-4 & Reinforcement Learning for Cybersecurity: A Survey & Nguyen et al. & 2023 & Fokus RL dalam security & Tidak spesifik web pentest & RL efektif untuk adaptive defense \\ \hline
+4 & Hierarchical Reinforcement Learning for Efficient and Effective Automated Penetration Testing of Large Networks & Ghanem et al. \cite{ghanem2023hrl} & 2023 & Menggunakan HRL untuk membagi pengujian jaringan besar & Dievaluasi pada pemodelan jaringan, bukan aplikasi web & Menggunakan pengelompokan jaringan untuk menangani skala pengujian \\ \hline
 
-5 & Deep Reinforcement Learning for Cyber Attack Detection & Alavizadeh et al. & 2024 & RL untuk decision-making & Fokus deteksi, bukan pentest & Akurasi keputusan meningkat \\ \hline
+5 & Modelling Penetration Testing with Reinforcement Learning Using Capture-the-Flag Challenges & Zennaro dan Erdodi \cite{zennaro2023} & 2023 & Membahas trade-off antara RL model-free dan pengetahuan awal & Menggunakan skenario CTF yang disederhanakan & Menunjukkan peran pengetahuan awal dalam eksplorasi agen \\ \hline
 
-6 & AI-Driven Vulnerability Detection in Web Applications & Singh et al. & 2024 & Fokus pada kerentanan web & Tidak menggunakan RL & Peningkatan deteksi celah \\ \hline
+6 & GAIL-PT: An Intelligent Penetration Testing Framework with Generative Adversarial Imitation Learning & Chen et al. \cite{chen2023gailpt} & 2023 & Menggabungkan pengetahuan ahli, imitation learning, dan RL/DRL & Tidak berfokus pada aplikasi web & Melaporkan evaluasi pada host dan jaringan simulasi \\ \hline
 
-7 & Automated Security Testing Using Machine Learning & Kumar et al. & 2024 & ML tingkatkan efisiensi testing & Tidak adaptif penuh & Mempercepat proses scanning \\ \hline
+7 & A Hierarchical Deep Reinforcement Learning Model with Expert Prior Knowledge for Intelligent Penetration Testing & Li et al. \cite{li2023hrlpt} & 2023 & Memanfaatkan prior ahli untuk membantu eksplorasi dan pembelajaran hierarkis & Berfokus pada pengujian jaringan, bukan aplikasi web & Mengusulkan model DRL hierarkis untuk penetration testing \\ \hline
 
-8 & Advances in Autonomous Cybersecurity Systems & Li et al. & 2025 & Sistem keamanan otonom berbasis AI & Masih bersifat umum & Menuju sistem security otomatis \\ \hline
-
-9 & Intelligent Web Security Testing Using AI Agents & Chen et al. & 2025 & AI agent untuk web testing & Belum fokus pada RL & Agent tingkatkan efisiensi testing \\ \hline
+8 & An Automated Penetration Testing Framework Based on Hierarchical Reinforcement Learning & Liu et al. \cite{liu2024hrlpt} & 2024 & Menggunakan dua tingkat agen dan action masking & Berorientasi pada jaringan industri dan bukan target web & Mengurangi ruang aksi yang tidak tersedia dalam skenario uji \\ \hline
 
 \end{tabularx}
-\caption{Ringkasan Penelitian Terdahulu (1--9)}
+\caption{Ringkasan Penelitian Terdahulu (1--8)}
 \end{table}
 
 Kajian literatur dalam penelitian ini dilakukan untuk memahami perkembangan penelitian terkait \textit{automated penetration testing}, pemanfaatan \textit{machine learning} dalam keamanan siber, serta penerapan \textit{Reinforcement Learning} pada proses pengujian keamanan aplikasi web.
@@ -204,9 +202,9 @@ Berdasarkan hasil kajian literatur, diketahui bahwa sebagian besar pendekatan \t
 
 Penelitian terdahulu memiliki peran penting sebagai dasar dalam memahami perkembangan pendekatan otomatisasi pengujian keamanan, khususnya pada bidang \textit{automated penetration testing}. Melalui kajian terhadap beberapa penelitian sebelumnya, dapat diketahui metode, kelebihan, keterbatasan, serta peluang pengembangan yang masih dapat diteliti lebih lanjut. Kajian ini juga digunakan untuk memperjelas posisi penelitian yang dilakukan, terutama dalam penerapan \textit{Reinforcement Learning} sebagai mekanisme pengambilan keputusan adaptif pada pengujian keamanan aplikasi web.
 
-Berdasarkan Tabel 2.1, dapat disimpulkan bahwa pemanfaatan kecerdasan buatan dalam \textit{penetration testing} mengalami perkembangan yang signifikan, khususnya dalam penggunaan \textit{machine learning} dan AI berbasis \textit{agent}. Penelitian oleh Deng et al, menunjukkan bahwa \textit{large language model} mampu meningkatkan efektivitas \textit{penetration testing}, sementara Zhang et al. (\cite{zhang2023}) mengembangkan sistem \textit{automated pentesting} berbasis \textit{AI planning} yang meningkatkan efisiensi pengujian.
+Berdasarkan Tabel 2.1, penelitian terkait otomatisasi \textit{penetration testing} telah mengeksplorasi berbagai pendekatan, termasuk LLM, pembelajaran imitasi, Q-learning, dan HRL. Deng et al. (\cite{deng2024pentestgpt}) mengkaji penggunaan LLM untuk mendukung \textit{penetration testing}, sedangkan Ghanem et al. (\cite{ghanem2023hrl}) menggunakan HRL untuk menangani pengujian pada jaringan berskala besar.
 
-Selain itu, penelitian oleh Nguyen et al. (\cite{nguyen2023}) serta Alavizadeh et al. (\cite{alavizadeh2024}) menunjukkan bahwa \textit{reinforcement learning} memiliki potensi dalam pengambilan keputusan adaptif pada sistem keamanan siber. Pendekatan ini memungkinkan sistem untuk belajar dari interaksi dengan lingkungan sehingga mampu meningkatkan performa secara bertahap.
+Selain itu, survei Nguyen dan Reddi (\cite{nguyen2023}) membahas penerapan DRL di berbagai ranah keamanan siber, sementara Alavizadeh et al. (\cite{alavizadeh2022}) menerapkan deep Q-learning pada deteksi intrusi jaringan. Kedua penelitian tersebut menunjukkan penggunaan RL dalam konteks keamanan, tetapi tidak secara langsung mengevaluasi pengujian eksploitasi pada aplikasi web.
 
 Namun demikian, sebagian besar penelitian masih memiliki keterbatasan, seperti tidak spesifik diterapkan pada aplikasi web, berfokus pada deteksi dibanding eksploitasi, atau belum mengintegrasikan \textit{reinforcement learning} sebagai mekanisme utama dalam \textit{automated penetration testing}. Oleh karena itu, penelitian ini berfokus pada integrasi \textit{reinforcement learning} untuk \textit{adaptive decision-making} dalam \textit{automated web penetration testing} pada lingkungan nyata, yaitu OWASP Juice Shop.
 
