@@ -1,0 +1,43 @@
+info: Detected Node.js version [1mv24.22.1[22m ([32mSUCCESS[39m)
+info: Detected OS [1mwin32[22m ([32mSUCCESS[39m)
+info: Detected CPU [1mx64[22m ([32mSUCCESS[39m)
+info: Configuration [1mdefault[22m validated ([32mSUCCESS[39m)
+info: Entity models [1m21[22m of [1m21[22m are initialized ([32mSUCCESS[39m)
+info: All dependencies in [1m./package.json[22m are satisfied ([32mSUCCESS[39m)
+info: Required file [1mserver.js[22m is present ([32mSUCCESS[39m)
+info: Required file [1mindex.html[22m is present ([32mSUCCESS[39m)
+info: Required file [1mstyles.css[22m is present ([32mSUCCESS[39m)
+info: Required file [1mmain.js[22m is present ([32mSUCCESS[39m)
+info: Required file [1mpolyfills.js[22m is present ([32mSUCCESS[39m)
+info: Required file matching [1m/^hacking-instructor-.+\.js$/[22m is present ([32mSUCCESS[39m)
+info: Port [1m3000[22m is available ([32mSUCCESS[39m)
+warn: Domain [1mhttps://www.alchemy.com/[22m is not reachable ([33mWARNING[39m)
+warn: [3m"Mint the Honey Pot" challenge[23m will not work as intended without access to [1mhttps://www.alchemy.com/[22m
+warn: [3m"Wallet Depletion" challenge[23m will not work as intended without access to [1mhttps://www.alchemy.com/[22m
+warn: Environment variable [1mALCHEMY_API_KEY[22m is not present ([33mWARNING[39m)
+warn: [3m"Mint the Honey Pot" challenge[23m will not work as intended without a valid [1mALCHEMY_API_KEY[22m
+warn: [3m"Wallet Depletion" challenge[23m will not work as intended without a valid [1mALCHEMY_API_KEY[22m
+info: Check [1mhttps://howto-web3.owasp-juice.shop[22m for instructions on how to set up and configure the Alchemy API
+warn: Domain [1mhttp://localhost:11434/v1[22m is not reachable ([33mWARNING[39m)
+warn: [3m"Chatbot Prompt Injection" challenge[23m will not work as intended without access to [1mhttp://localhost:11434/v1[22m
+warn: [3m"Greedy Chatbot Manipulation" challenge[23m will not work as intended without access to [1mhttp://localhost:11434/v1[22m
+warn: [3m"AI Debugging" challenge[23m will not work as intended without access to [1mhttp://localhost:11434/v1[22m
+warn: [3m"System Prompt Extraction" challenge[23m will not work as intended without access to [1mhttp://localhost:11434/v1[22m
+info: Check [1mhttps://howto-llm.owasp-juice.shop[22m for instructions on how to set up and configure the LLM API
+info: [36mServer listening on port [1m3000[22m[39m
+info: [32mSolved[39m 1-star [36merrorHandlingChallenge[39m (Error Handling)
+info: Cheat score for trivial [36merrorHandlingChallenge[39m solved in 0min (expected ~0min) with hints allowed: [32m0[39m
+info: [32mSolved[39m 3-star [36mforgedFeedbackChallenge[39m (Forged Feedback)
+info: Cheat score for tutorial [36mforgedFeedbackChallenge[39m solved in 0min (expected ~3min) with hints allowed: [31m0.9987833333333334[39m
+info: [32mSolved[39m 4-star [36mforgottenDevBackupChallenge[39m (Forgotten Developer Backup)
+info: Cheat score for [36mforgottenDevBackupChallenge[39m solved in 1min (expected ~8min) with hints allowed and 0% expected preceding URL interaction: [31m1[39m
+info: [32mSolved[39m 4-star [36mnullByteChallenge[39m (Poison Null Byte)
+info: Cheat score for tightly coupled [36mnullByteChallenge[39m solved in 0min (expected ~0min) with hints allowed: [32m0[39m
+info: [32mSolved[39m 4-star [36mforgottenBackupChallenge[39m (Forgotten Sales Backup)
+info: Cheat score for tightly coupled [36mforgottenBackupChallenge[39m solved in 0min (expected ~0min) with hints allowed and 0% expected preceding URL interaction: [32m0[39m
+info: [32mSolved[39m 4-star [36mmisplacedSignatureFileChallenge[39m (Misplaced Signature File)
+info: Cheat score for loosely coupled [36mmisplacedSignatureFileChallenge[39m solved in 0min (expected ~0min) with hints allowed and 0% expected preceding URL interaction: [32m0[39m
+info: [32mSolved[39m 2-star [36mloginAdminChallenge[39m (Login Admin)
+info: Cheat score for tutorial [36mloginAdminChallenge[39m solved in 1min (expected ~2min) with hints allowed: [31m0.6919583333333333[39m
+info: [32mSolved[39m 3-star [36mforgedReviewChallenge[39m (Forged Review)
+info: Cheat score for [36mforgedReviewChallenge[39m solved in 0min (expected ~6min) with hints allowed: [31m0.9373222222222222[39m

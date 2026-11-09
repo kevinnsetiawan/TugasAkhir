@@ -1,0 +1,588 @@
+\documentclass[conference, a4paper]{IEEEtran}
+
+% =========================================================
+% PACKAGES
+% =========================================================
+\usepackage[T1]{fontenc}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{listings}
+\usepackage[section]{placeins}
+
+% =========================================================
+% TITLE
+% =========================================================
+\title{
+Verification-Guided Q-Learning for Web Vulnerability Testing:
+An Empirical Evaluation
+}
+
+\author{
+\IEEEauthorblockN{Kevin Imanuel Setiawan}
+\IEEEauthorblockA{
+Program Studi Teknologi Informasi, Fakultas Informatika\\
+Telkom University Surabaya\\
+Surabaya, Indonesia
+}
+}
+\begin{document}
+
+\maketitle
+
+% =========================================================
+% ABSTRACT & KEYWORDS
+% =========================================================
+\begin{abstract}
+Automated web vulnerability testing can produce numerous
+candidate findings, yet unusual application responses do not
+necessarily indicate exploitable weaknesses. This study
+evaluates a verification-guided Q-Learning prototype that
+selects endpoint--payload actions against OWASP Juice Shop.
+The agent observes HTTP responses, derives discrete state
+features, and incorporates verification outcomes into reward
+assignment. Its configured action space contains 120
+endpoint--payload combinations, formed from eight endpoints
+and 15 payloads per endpoint. Across five seeds, Q-Learning
+verified a mean of 12.8 actions (SD 1.10; range 11--14) and
+found all 14 reference actions in one run. A random policy found
+all 14 in five runs, with mean full-coverage episode 308.4; a
+fixed-order scan found all 14 by episode 66 in one run. A
+Q-Learning ablation without verification-guided reward found a
+mean of 13.0 actions across five seeds. These comparisons use
+the same curated reference and verification procedure, so they
+do not establish generalization or independent detector accuracy.
+A separate detector benchmark reported recall 0.929 and F1-score
+0.963 on 74 labelled actions; 46 unknown cases were excluded.
+The results provide no evidence that Q-Learning improves
+discovery efficiency in this fixed, source-informed action space.
+
+\end{abstract}
+\begin{IEEEkeywords}
+Automated penetration testing, reinforcement learning, Q-Learning,
+web vulnerability testing, vulnerability verification, OWASP Juice Shop
+\end{IEEEkeywords}
+% =========================================================
+% 1. INTRODUCTION
+% =========================================================
+\section{Introduction}
+
+Web applications expose many routes and input points, so automated
+testing can produce response anomalies that need careful review.
+An error, reflected string, or response-size change may identify a
+candidate, but does not alone establish exploitability. A confirmed
+finding requires evidence suited to the tested vulnerability class.
+
+Reinforcement learning (RL) formulates testing as a sequence of
+actions informed by observations and rewards. Tabular Q-Learning
+updates values for state--action pairs from observed transitions
+\cite{sutton2018}. Prior security work applies RL to grey-box SQL
+injection detection, vulnerability exploitation, and autonomous
+penetration testing \cite{sqirl2023,almajali2024,li2025}. Reviews
+and agent comparisons also show that reported performance depends
+on the environment, action space, and evaluation protocol
+\cite{rlreview2026,sok2024}.
+
+This study evaluates a verification-guided Q-Learning prototype in
+a fixed OWASP Juice Shop test space. Its contributions are:
+
+\begin{itemize}
+    \item A tabular Q-Learning workflow that uses verification
+    outcomes when assigning rewards.
+
+    \item A comparison with random and fixed-order policies,
+    together with reward-verification and reward-scale ablations,
+    under a matched target-request budget.
+
+    \item A detector-blind audit using direct response and browser
+    evidence, with inconclusive actions retained as unknown.
+\end{itemize}
+
+The endpoints, payloads, and surface labels were selected with
+source-informed human prior. The findings therefore describe this
+configured application and do not establish performance on arbitrary
+targets or autonomous endpoint discovery.
+
+% =========================================================
+% 2. RELATED WORK
+% =========================================================
+\section{Related Work}
+
+SQIRL examines grey-box RL for SQL injection detection \cite{sqirl2023};
+other studies consider deep RL exploitation, partially observable
+agents, and larger network settings \cite{almajali2024,li2025,ghanem2023}.
+Surveys and comparative evaluations emphasize that conclusions depend
+on each agent's target and test protocol \cite{rlreview2026,sok2024}.
+The OWASP Web Security Testing Guide informs the study's distinction
+between an anomaly and a finding \cite{owaspwstg}. SQL injection and
+file candidates receive controls, while XSS is checked in a browser
+with Playwright \cite{playwright}. These checks bound the claims to
+the implemented test cases.
+
+\section{Methodology}
+
+\subsection{Experimental Environment}
+
+Trials used OWASP Juice Shop 20.2.0, an intentionally insecure
+security-training application \cite{juiceshop}, on Windows with
+Node.js v24.22.1. Each fresh instance ran
+\texttt{node build/app.js} on port 3001 and reinitialized SQLite.
+A counting proxy on port 3000 forwarded target traffic; requests
+timed out after 10 seconds. Eight benign probes set endpoint-specific
+response-length baselines.
+
+The agent selects from eight configured routes and 15 payloads
+per route, observes each HTTP response, and updates state--action
+values. Results are specific to this configuration.
+
+\subsection{HTTP API and Endpoint Coverage}
+
+The client places each payload in a configured query parameter,
+path, or JSON body. Status, body length, content type, and response
+time form the observation. Table~\ref{tab:api-endpoints} lists the
+eight routes.
+
+\begin{table}[!t]
+\caption{HTTP Routes Used in the Experiment}
+\label{tab:api-endpoints}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{c p{0.41\columnwidth} p{0.43\columnwidth}}
+\toprule
+\textbf{Idx.} & \textbf{Method and route} & \textbf{Role in the experiment}\\
+\midrule
+0 & GET \url{/rest/products/search?q=} & Product search; SQLi and search-page XSS checks\\
+1 & GET \url{/ftp/} + path & File-serving route; path and extension-bypass checks\\
+2 & GET \url{/rest/products/1/reviews?id=} & Review retrieval; plain-surface control\\
+3 & GET \url{/rest/track-order/} + path & Order tracking; browser-based XSS checks on the result page\\
+4 & POST \url{/rest/user/login} & Login request with a JSON body; SQLi checks\\
+5 & PUT \url{/rest/products/1/reviews} & Review submission with a JSON body; plain-surface control\\
+6 & POST \url{/api/Feedbacks} & Feedback JSON body; requires CAPTCHA fields\\
+7 & GET \url{/api/Challenges?q=} & Challenge API; plain-surface control\\
+\bottomrule
+\end{tabular}
+\end{table}
+\setlength{\tabcolsep}{6pt}
+
+Source inspection informed route selection: search and login reach
+SQL handlers, \texttt{/ftp/} serves files, and the track-order
+identifier is rendered in a browser. Other routes are controls. This
+is a researcher-defined surface, not autonomous endpoint discovery.
+Feedback requests include a CAPTCHA answer from \url{/rest/captcha}.
+Before testing, \texttt{hello} establishes each baseline. XSS checks
+load the corresponding single-page application (SPA). Source-informed
+surface labels select checks; they do not predetermine findings.
+
+\subsection{Action Space}
+
+Let $\mathcal{E}$ and $\mathcal{P}$ be the configured endpoint
+and payload sets. Their Cartesian product gives
+$\mathcal{A}=\mathcal{E}\times\mathcal{P}$ and
+$|\mathcal{A}|=8\times15=120$ actions.
+
+Table~\ref{tab:payloads} lists the templates, which are paired with
+each route and placed in its configured input. The long-input probe
+contains 1,628 ASCII \texttt{A} characters. This action space is fixed
+before training.
+
+\begin{table*}[!t]
+\caption{Configured Payload Templates}
+\label{tab:payloads}
+\centering
+\scriptsize
+\begin{tabular}{p{0.20\textwidth}p{0.12\textwidth}p{0.63\textwidth}}
+\toprule
+\textbf{Name} & \textbf{Class} & \textbf{Payload}\\
+\midrule
+\texttt{sqli\_tautology} & SQLi & \lstinline|' OR '1'='1|\\
+\texttt{sqli\_comment} & SQLi & \lstinline|apple'--|\\
+\texttt{sqli\_union} & SQLi & \lstinline|' UNION SELECT NULL--|\\
+\texttt{sqli\_time} & SQLi & \lstinline|' OR SLEEP(5)--|\\
+\texttt{sqli\_wildcard} & SQLi & \lstinline|%s%s%s%s%s%s%s%s|\\
+\texttt{sqli\_login} & SQLi & \lstinline|{"email":"admin@juice-sh.op' OR '1'='1","password":"a"}|\\
+\texttt{xss\_img} & XSS & \lstinline|<img src=x onerror=alert(document.domain)>|\\
+\texttt{xss\_script} & XSS & \lstinline|<script>alert(document.domain)</script>|\\
+\texttt{xss\_svg} & XSS & \lstinline|<svg onload=alert(1)>|\\
+\texttt{xss\_review} & XSS & \lstinline|{"message":"<img src=x onerror=alert(document.domain)>","author":"rlpoc"}|\\
+\texttt{lfi\_poison\_null} & File & \lstinline|package.json.bak%2500.md|\\
+\texttt{lfi\_coupons} & File & \lstinline|coupons_2013.md.bak%2500.md|\\
+\texttt{lfi\_wap\_rules} & File & \lstinline|suspicious_errors.yml%2500.pdf|\\
+\texttt{fuzz\_long} & Fuzzing & \texttt{A} repeated 1,628 times\\
+\texttt{fuzz\_null} & Fuzzing & \lstinline|admin%00|\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Each action submits one template to one route. The following state
+is derived from its response. Payload and surface choices encode
+prior knowledge of Juice Shop and constrain the experiment's scope.
+
+\subsection{State Representation}
+
+The state contains eight features:
+
+\begin{equation}
+\begin{split}
+s_t = (&\text{status\_cat},
+\text{length\_cat},
+\text{err\_flag},
+\text{refl\_flag},\\
+&\text{vuln\_ind},
+\text{ep\_idx},
+\text{resp\_time\_cat},
+\text{content\_cat}).
+\end{split}
+\label{eq:state}
+\end{equation}
+
+The features encode HTTP status and length categories, error and
+reflection flags, a vulnerability indicator, endpoint index, response
+time, and content type. Length changes are measured against the route's
+baseline; changes above 15\% are significant. Response time is fast
+below 0.5 s, medium from 0.5--2.0 s, and slow above 2.0 s. The state
+captures only these configured response characteristics.
+
+\subsection{Q-Learning Update}
+
+The tabular update uses the observed reward and the largest estimated
+value in the next state \cite{sutton2018}:
+
+\begin{equation}
+\begin{aligned}
+Q(s_t,a_t) \leftarrow Q(s_t,a_t) + \alpha[&r_t + \gamma \max_{a'} Q(s_{t+1},a')\\
+&- Q(s_t,a_t)].
+\end{aligned}
+\label{eq:ql}
+\end{equation}
+
+Here $s_t,a_t,r_t,s_{t+1}$ denote the current state, selected action,
+reward, and next state; $\alpha$ and $\gamma$ are the learning rate
+and discount factor.
+
+The configuration uses $\alpha=0.1$, $\gamma=0.9$, and an
+$\epsilon$-greedy policy with $\epsilon$ decaying from 1.0 by 0.90
+per episode to a 0.1 floor. This floor is reached at episode 23; only
+the first seven episodes have $\epsilon\geq0.5$. The decay was not
+tuned. Only verified findings are masked; other actions remain
+eligible. Episode counts vary under the shared request cap because
+verification traffic differs.
+
+\subsection{Comparative Experimental Protocol}
+
+Each trial had an exact cap of 1,640 requests forwarded to Juice Shop,
+counting probes, baselines, CAPTCHA lookups, controls, browser
+navigations, and loaded resources. Excess attempts were blocked and
+logged. Q-Learning and random selection used five seeds (42--46);
+fixed order was repeated on five fresh instances. It cycled through
+ascending action indices, skipping only verified actions. All policies
+used the same cap and mask.
+
+The five-seed ablation kept verification for reporting and masking,
+but used the pre-verification reward for Q updates. Reward sensitivity
+used three paired seeds (42--44) with verified/anomaly/normal/error
+rewards of $+25/+5/-1/-5$ and $+100/+20/-1/-5$; length bonuses were
+unchanged. Each trial began from a fresh instance. Actions are
+conditioned on the preceding response summary, not on application
+workflow state or an exploit chain; the method therefore tests
+response-informed scheduling within this fixed action set.
+
+\subsection{Verification-Guided Reward Assignment}
+
+Rewards are $+50$ for verified findings, $+10$ for unverified
+anomalies, $-1$ for ordinary responses, and $-5$ for failed attack
+requests, plus a length-category bonus ($+0$, $+0$, $+5$, or $+10$).
+SQLi and file candidates must differ from both a benign \texttt{hello}
+control and a distinct neutralized-input control. For XSS, headless
+Chromium checks whether an instrumented DOM canary executes while the
+neutralized control remains inactive; reflection is not enough. A
+failed control leaves the candidate inconclusive and unverified.
+After demotion, the base reward is $+10$ only if anomaly flags persist;
+otherwise it is $-1$, with the length bonus retained.
+
+The analyzer's SQLi candidates require a database error with an HTTP
+error, or a successful response-length change of at least 15\% for a
+SQL-like input; repeated wildcards have a separate rule. File disclosure
+requires protected-content evidence or a \texttt{\%2500} extension
+bypass with a disallowed content type; a listing or size change alone
+does not qualify. The probes target three named backup files. Training
+logs lack raw bodies and content types, so the audit collected these
+evidence items separately. Reward values were configured rather than
+optimized; two alternative scales are compared in
+Section~\ref{sec:reward-sensitivity}.
+
+\subsection{Detector-Blind Oracle Audit}
+
+The authors audited all 120 actions without importing the response
+analyzer or prior labels. Evidence included returned records, SQLite
+errors, authentication outcomes, byte-level protected-file matches,
+and five browser-dialog attempts with neutralized controls. The
+version-specific Juice Shop challenge catalogue corroborated, but did
+not determine, labels~\cite{juicechallenges}. The audit found 13
+positive, 69 negative, and 38 unknown actions; inconclusive cases remain
+unknown. Raw bodies, hashes, content types, DOM snapshots, screenshots,
+and per-attempt records are retained. The procedure was detector-blind
+but author-run; no external reviewer adjudicated the labels.
+
+\subsection{Evaluation Metrics}
+
+Comparisons use true positives (TP), false positives (FP), false
+negatives (FN), and true negatives (TN). Recall and F1-score are
+computed on labelled actions only; the 38 unknown actions are excluded.
+
+\begin{equation}
+\mathrm{Recall} = \frac{TP}{TP+FN}.
+\label{eq:recall}
+\end{equation}
+
+\begin{equation}
+\mathrm{F1} =
+2\frac{\mathrm{Precision}\times\mathrm{Recall}}
+{\mathrm{Precision}+\mathrm{Recall}}.
+\label{eq:f1}
+\end{equation}
+
+% =========================================================
+% 4. RESULTS AND DISCUSSION
+% =========================================================
+\section{Results and Discussion}
+
+\subsection{Comparative Results}
+
+Table~\ref{tab:strategy-results} summarizes all 22 trials.
+Each trial used 1,585 primary endpoint--payload episodes.
+The 14-action reference set is the same curated set used in the
+detector benchmark; it is not an independent oracle. Q-Learning
+found a mean of 12.8 actions (SD 1.10; range 11--14), and only
+one of five seeds found all 14. Uniform random selection found
+all 14 in all five seeds, while the fixed-order scan found all
+14 by episode 66 in its single deterministic run. The random
+baseline's mean episode for full coverage was 308.4 (range
+217--440). These results provide no evidence that Q-Learning
+improves discovery efficiency in this fixed action space.
+
+\begin{table*}[!t]
+\caption{Matched Primary-Action Budget Comparison}
+\label{tab:strategy-results}
+\centering
+\scriptsize
+\begin{tabular}{p{0.20\textwidth}c p{0.28\textwidth}c c p{0.17\textwidth}}
+\toprule
+\textbf{Method} & \textbf{$n$} & \textbf{Verified actions, mean (SD); range} & \textbf{All 14} & \textbf{Episode to all 14$^*$} & \textbf{Mean requests}\\
+\midrule
+Q-Learning & 5 & 12.80 (1.10); 11--14 & 1/5 & 787.0 & 1,634.2\\
+Random & 5 & 14.00 (0.00); 14--14 & 5/5 & 308.4 & 1,639.2\\
+Fixed order & 1 & 14.00; 14--14 & 1/1 & 66.0 & 1,639.0\\
+QL without verification reward & 5 & 13.00 (1.22); 11--14 & 2/5 & 989.0 & 1,635.6\\
+Lower reward & 3 & 13.33 (0.58); 13--14 & 1/3 & 787.0 & 1,637.0\\
+Higher reward & 3 & 13.33 (0.58); 13--14 & 1/3 & 787.0 & 1,636.7\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The fixed-order scan visits action indices in ascending order;
+the final positive reference action occurs at index 65, so all 14
+were reached by episode 66. Its single run is descriptive rather
+than a variance estimate. The random policy reached full coverage
+in all five seeds. Its performance is a direct baseline for the
+configured 120-action space, not evidence about unknown endpoints
+or vulnerabilities outside that space.
+
+The Q-Learning-without-verification-reward ablation averaged
+13.0 verified actions (SD 1.22; range 11--14), with full coverage
+in two of five seeds. This ablation still used verification for
+the finding log and action mask; it removes the verification
+verdict from the reward update, not from the whole policy.
+
+The 14 reference actions are five search-SQLi, two search-XSS,
+three FTP file-disclosure (labelled fuzzing by the detector),
+three track-order-XSS, and one login-SQLi action. These are
+repeated endpoint--payload findings across five endpoint--class
+pairs, not 14 independent root causes.
+\subsection{Reward Sensitivity}
+\label{sec:reward-sensitivity}
+
+The lower ($+25/+5/-1/-5$) and higher ($+100/+20/-1/-5$)
+reward settings produced the same verified-action counts as the
+base reward ($+50/+10/-1/-5$) for paired seeds 42--44: 14, 13,
+and 13 actions, respectively. In each setting, only seed 42
+found all 14, at episode 787. This three-seed sensitivity check
+shows no observed change in these discovery outcomes under the
+tested reward scales; it does not establish insensitivity for
+other seeds, reward ratios, or applications. Length bonuses
+were unchanged.
+
+\subsection{Detector-Blind Audit Results}
+
+The detector-blind audit classified 13 actions as positive, 69 as
+negative, and 38 as unknown. Previously recorded no-agent analyzer
+outputs, rescored against these labels, matched all 13 positives and all 69
+negatives; the 38 unknown cells were excluded. This subset agreement
+is not an external accuracy estimate: the audit was author-run, and
+the RL verifier showed a reproducibility discrepancy for one SVG
+action, discussed below.
+
+\begin{table*}[!t]
+\caption{Direct-Effect Evidence and Negative Controls}
+\label{tab:oracle-evidence}
+\centering
+\scriptsize
+\begin{tabular}{p{0.16\textwidth}p{0.45\textwidth}p{0.31\textwidth}}
+\toprule
+\textbf{Test group} & \textbf{Observed response or browser effect} & \textbf{Control result}\\
+\midrule
+Search SQLi (5 actions) & Tautology returned all 46 catalogue records; three crafted inputs returned SQLite parser errors; wildcard input returned 16 records. & Benign search returned 0; wildcard-neutralized search returned 0; neutralized SQL inputs produced no parser error.\\
+Login SQLi (1 action) & Response contained an admin authentication token (redacted in the saved record). & Invalid-password control returned HTTP 401 and no token.\\
+File disclosure (3 actions) & Raw bodies matched the packaged backup, coupon, and YAML files by SHA-256; sizes were 4,440, 142, and 741 bytes, with octet-stream or YAML content types. & Removing the encoded null-byte bypass produced HTTP 404 for all three requests.\\
+XSS (4 actions) & Four original vectors across search and track-order pages triggered a JavaScript dialog in 5/5 attempts each. & Each neutralized control triggered 0/5 dialogs. The separate track-order SVG vector triggered 0/5 and remained negative.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The raw HTTP bodies and content types, hashes, controls, browser DOM
+snapshots, screenshots, and five-attempt traces are stored with the
+revision evidence. The action-level audit counts the track-order SVG
+as negative because the original vector produced no dialog in five
+direct browser attempts. In several RL runs, the instrumented canary
+accepted that action. This difference shows that changing a handler
+to a canary can yield a verdict that the original vector does not
+reproduce; those policy detections are reported as false positives
+against the direct-effect audit.
+
+\subsection{Limitations}
+
+The study covers one Juice Shop release and a human-defined set of
+eight routes and 15 payloads. Its state records selected HTTP features,
+not application workflow; results do not establish transfer to other
+targets. The detector-blind oracle was run by the authors without an
+external second reviewer, and 38 cells remain unknown. Any metric is
+therefore a consistency measure on this labelled subset.
+
+Stochastic policies use five seeds and reward-scale variants use three
+paired seeds. Fixed order is deterministic, repeated on five fresh
+instances, and is descriptive rather than a source of stochastic
+variance. The shared budget fixes forwarded HTTP requests, so primary
+action counts differ; requests beyond the cap are blocked locally.
+The launch details for the earlier single-seed run were not recorded;
+the replicated trials use the setup stated above.
+
+The state update and verification interfaces could be adapted after
+defining a new target's routes, input locations, payloads, baselines,
+and verification rules. The current route map and browser pages are
+Juice Shop specific, so the prototype is not a general-purpose scanner.
+
+\section{Conclusion}
+
+This study compared verification-guided Q-Learning with
+random and fixed-order action selection on a 120-action
+OWASP Juice Shop test space. Across five seeds, Q-Learning
+verified a mean of 12.8 of the 14 curated reference actions
+(SD 1.10; range 11--14), and reached all 14 in one run.
+Random selection reached all 14 in five of five runs, with
+mean full-coverage episode 308.4. The fixed-order scan reached
+all 14 by episode 66 in its single run. The Q-Learning ablation
+without verification-guided reward averaged 13.0 actions across
+five seeds. These results do not show a discovery-efficiency
+advantage for Q-Learning in this finite, source-informed space.
+
+The separate detector benchmark reported recall of 0.929
+and F1-score of 0.963 on the labelled subset, with 46 unknown
+actions excluded. Because the manual reference checks use
+evidence related to the prototype's verification procedure,
+these values show consistency with the curated reference set
+rather than independent generalization. The comparison uses the
+same verifier and labels for all policies, so it does not provide
+independent confirmation of vulnerability truth.
+
+Future work should obtain an independent label audit, increase
+the number of seeds, enforce an exactly matched total-request
+budget including verification overhead, capture raw response and
+browser traces, and evaluate additional applications after their
+endpoint maps and verification rules have been specified.
+
+% =========================================================
+% ACKNOWLEDGMENT
+% =========================================================
+\begin{thebibliography}{99}
+
+\bibitem{sqirl2023}
+A. Al Wahaibi, S. Foley, and S. Maffeis,
+``SQIRL: Grey-Box Detection of SQL Injection Vulnerabilities
+Using Reinforcement Learning,''
+in \textit{Proceedings of the 32nd USENIX Security Symposium},
+2023, pp. 6097--6114.
+
+\bibitem{rlreview2026}
+J. Liu et al.,
+``Autonomous penetration testing using reinforcement learning:
+A review and perspectives,''
+\textit{Expert Systems with Applications},
+vol. 300, Art. no. 130219, 2026,
+doi: 10.1016/j.eswa.2025.130219.
+
+\bibitem{sok2024}
+M. Simon and S. Mees,
+``SoK: A Comparison of Autonomous Penetration Testing Agents,''
+in \textit{Proceedings of the 19th International Conference on
+Availability, Reliability and Security (ARES)}, 2024,
+doi: 10.1145/3664476.3664484.
+
+\bibitem{sutton2018}
+R. S. Sutton and A. G. Barto,
+\textit{Reinforcement Learning: An Introduction},
+2nd ed. Cambridge, MA, USA: MIT Press, 2018.
+
+\bibitem{juiceshop}
+OWASP Foundation,
+``OWASP Juice Shop.''
+[Online]. Available:
+\url{https://owasp.org/www-project-juice-shop/}
+
+\bibitem{juicechallenges}
+OWASP Foundation,
+``OWASP Juice Shop challenge catalogue, version 20.2.0.''
+[Online]. Available:
+\url{https://github.com/juice-shop/juice-shop/blob/v20.2.0/data/static/challenges.yml}
+
+\bibitem{owaspwstg}
+OWASP Foundation,
+``Web Security Testing Guide.''
+[Online]. Available:
+\url{https://owasp.org/www-project-web-security-testing-guide/}
+
+\bibitem{playwright}
+Microsoft,
+``Playwright Documentation.''
+[Online]. Available:
+\url{https://playwright.dev/docs/intro}
+
+\bibitem{almajali2024}
+A. AlMajali, L. Al-Abed, K. M. A. Yousef,
+B. J. Mohd, Z. Samamah, and A. Abu Shhadeh,
+``Automated Vulnerability Exploitation Using Deep Reinforcement
+Learning,''
+\textit{Applied Sciences},
+vol. 14, no. 20, Art. no. 9331, 2024,
+doi: 10.3390/app14209331.
+
+\bibitem{li2025}
+Z. Li et al.,
+``EPPTA: Efficient partially observable reinforcement learning
+agent for penetration testing applications,''
+\textit{Engineering Reports},
+vol. 7, no. 1, Art. no. e12818, 2025,
+doi: 10.1002/eng2.12818.
+
+\bibitem{ghanem2023}
+M. C. Ghanem, T. M. Chen, and E. G. Nepomuceno,
+``Hierarchical reinforcement learning for efficient and effective
+automated penetration testing of large networks,''
+\textit{Journal of Intelligent Information Systems},
+vol. 60, pp. 281--303, 2023,
+doi: 10.1007/s10844-022-00738-0.
+
+\end{thebibliography}
+
+\end{document}

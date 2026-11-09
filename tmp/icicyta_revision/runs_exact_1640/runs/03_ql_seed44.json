@@ -1,0 +1,77 @@
+{
+  "run_id": "03_ql_seed44",
+  "mode": "ql",
+  "seed": 44,
+  "primary_episodes": 808,
+  "action_count": 120,
+  "verified_action_count": 10,
+  "verified_actions": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    9,
+    27,
+    51,
+    53
+  ],
+  "independent_oracle_positive_action_count": 13,
+  "oracle_true_positive_actions": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    9,
+    27,
+    51
+  ],
+  "oracle_false_positive_actions": [
+    53
+  ],
+  "oracle_missed_positive_actions": [
+    25,
+    26,
+    54,
+    65
+  ],
+  "independent_oracle_full_coverage_episode": null,
+  "first_verified_episode": 5,
+  "unique_actions_visited": 67,
+  "unique_endpoint_class_pairs": 4,
+  "endpoint_class_pairs": [
+    [
+      0,
+      "sqli"
+    ],
+    [
+      0,
+      "xss"
+    ],
+    [
+      1,
+      "fuzzing"
+    ],
+    [
+      3,
+      "xss"
+    ]
+  ],
+  "setup_target_requests_before_primary_actions": 9,
+  "baseline_endpoint_count": 8,
+  "total_requests_forwarded_to_target": 1640,
+  "request_budget": 1640,
+  "budget_exactly_used": true,
+  "over_budget_requests_rejected_at_proxy": 0,
+  "verification_requests_reported_by_agent": 33,
+  "browser_top_level_navigations": 22,
+  "cumulative_reward": 4141,
+  "training_duration_seconds": 136.04,
+  "epsilon_decay": 0.9,
+  "verification_guided_reward": true,
+  "verification_still_used_for_reporting_and_action_masking": true,
+  "browser_verifier_warning": null
+}

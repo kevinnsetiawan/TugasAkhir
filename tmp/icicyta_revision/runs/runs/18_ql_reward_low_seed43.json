@@ -1,0 +1,70 @@
+{
+  "run_id": "18_ql_reward_low_seed43",
+  "mode": "ql_reward_low",
+  "seed": 43,
+  "episodes": 1585,
+  "action_count": 120,
+  "expected_positive_actions_from_existing_reference": 14,
+  "discovered_action_count": 13,
+  "discovered_actions": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    9,
+    25,
+    27,
+    51,
+    53,
+    54,
+    65
+  ],
+  "per_class_verified_actions": {
+    "sqli": 6,
+    "xss": 5,
+    "fuzzing": 2
+  },
+  "unique_endpoint_class_pairs": 5,
+  "endpoint_class_pairs": [
+    [
+      0,
+      "sqli"
+    ],
+    [
+      0,
+      "xss"
+    ],
+    [
+      1,
+      "fuzzing"
+    ],
+    [
+      3,
+      "xss"
+    ],
+    [
+      4,
+      "sqli"
+    ]
+  ],
+  "first_verified_episode": 6,
+  "episode_all_reference_positives_found": null,
+  "baseline_probe_requests": 8,
+  "verification_requests": 44,
+  "browser_navigations": 29,
+  "total_requests_including_verification": 1637,
+  "cumulative_reward": 3918,
+  "training_duration_seconds": 144.33,
+  "epsilon_decay": 0.9,
+  "reward_setting": {
+    "verified": 25,
+    "anomaly": 5,
+    "normal": -1,
+    "error": -5
+  },
+  "verification_guided_reward": true,
+  "verification_still_used_for_reporting_and_action_masking": true,
+  "browser_verifier_warning": null
+}

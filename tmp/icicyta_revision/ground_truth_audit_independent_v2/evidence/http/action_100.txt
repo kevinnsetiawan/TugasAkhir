@@ -1,0 +1,1 @@
+{"status":"success","data":{"id":19,"rating":1,"UserId":1,"updatedAt":"2026-11-08T15:58:56.918Z","createdAt":"2026-11-08T15:58:56.918Z","comment":null}}

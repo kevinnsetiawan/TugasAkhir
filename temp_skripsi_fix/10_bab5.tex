@@ -1,0 +1,37 @@
+\chapter{Kesimpulan dan Saran}
+
+\section{Kesimpulan}
+
+Berdasarkan perancangan, implementasi, dan pengujian sistem \textit{automated web penetration testing} berbasis \textit{Reinforcement Learning} pada aplikasi OWASP Juice Shop, kesimpulan penelitian ini adalah sebagai berikut.
+
+\begin{enumerate}
+    \item Sistem pengujian penetrasi web berbasis \textit{Reinforcement Learning} berhasil diimplementasikan dengan mengintegrasikan agen, pembangkit \textit{payload}, klien HTTP, penganalisis respons, mekanisme verifikasi, dan pencatatan hasil. Pengujian menggunakan delapan \textit{endpoint} dan 15 \textit{payload}, sehingga terdapat 120 kombinasi aksi yang menjadi ruang pengujian. Sistem juga menerapkan verifikasi kontrol-diferensial untuk kandidat SQL Injection dan \textit{fuzzing}, serta verifikasi eksekusi pada DOM menggunakan peramban untuk kandidat XSS.
+
+    \item Dengan anggaran masing-masing 1.585 episode, Q-Learning memperoleh 14 aksi dengan kerentanan terverifikasi, sedangkan DQN memperoleh 12. Temuan Q-Learning terdiri atas enam SQL Injection, lima XSS terverifikasi pada DOM, dan tiga temuan \textit{fuzzing} atau pengungkapan berkas. Temuan DQN terdiri atas enam SQL Injection, empat XSS terverifikasi pada DOM, dan dua temuan \textit{fuzzing} atau pengungkapan berkas. Kedua agen mencapai lima lokasi kerentanan unik, yang dihitung sebagai pasangan \textit{endpoint} dan kelas kerentanan. Pada \textit{run} yang diamati, \textit{vuln hit rate} Q-Learning adalah 0,88\% dan DQN 0,76\%.
+
+    \item Pola hasil kedua agen menunjukkan perbedaan pada beberapa aspek. Q-Learning memperoleh lebih banyak aksi terverifikasi, sedangkan DQN mencapai seluruh temuan yang akhirnya diperolehnya pada episode ke-443, dibandingkan episode ke-787 pada Q-Learning. DQN juga menghasilkan \textit{cumulative reward} yang lebih tinggi, yaitu 10.209 dibandingkan 3.785. Namun, nilai \textit{reward} yang lebih tinggi tidak dengan sendirinya menunjukkan deteksi yang lebih baik; hasil perlu dinilai bersama jumlah temuan terverifikasi, efisiensi permintaan, dan karakteristik fungsi \textit{reward}. Perbandingan ini terbatas pada satu \textit{run} dan tidak menunjukkan keunggulan umum salah satu algoritma.
+
+    \item Evaluasi detektor terhadap 120 aksi menghasilkan 13 \textit{true positive}, satu \textit{false negative}, dan nol \textit{false positive} pada 60 aksi yang berlabel negatif. Sebanyak 46 aksi lainnya berstatus \textit{unknown} dan tidak digunakan sebagai label negatif. Hasil tersebut menunjukkan konsistensi detektor terhadap \textit{ground truth} terkurasi dalam pengujian ini. Hasil ini tidak dapat dianggap sebagai bukti akurasi universal karena label dan mekanisme verifikasi menggunakan bukti teknis yang sejenis.
+
+    \item Pada perbandingan terbatas di dua \textit{endpoint} yang sama, Q-Learning memperoleh 10 temuan relevan dan OWASP ZAP memperoleh dua temuan relevan. Hasil ini bersifat deskriptif karena strategi pemindaian dan cara penghitungan permintaan kedua sistem berbeda. Oleh karena itu, hasil tersebut belum cukup untuk menyimpulkan bahwa salah satu sistem secara umum lebih efisien daripada sistem lainnya.
+
+    \item Evaluasi kinerja agen dalam penelitian ini bersifat \textit{in-sample}, karena metrik dihitung dari episode yang juga digunakan selama pelatihan. Pengujian juga dilakukan pada satu aplikasi target dan satu nilai \textit{random seed}. Dengan demikian, hasil penelitian menggambarkan kinerja sistem pada lingkungan dan konfigurasi yang digunakan, tetapi belum mengukur generalisasi pada data uji terpisah, target lain, atau variasi antar-\textit{run}.
+\end{enumerate}
+
+\section{Saran}
+
+Berdasarkan hasil dan keterbatasan penelitian, beberapa saran untuk pengembangan selanjutnya adalah sebagai berikut.
+
+\begin{enumerate}
+    \item Penelitian selanjutnya disarankan menjalankan eksperimen menggunakan beberapa nilai \textit{random seed}. Hasil dapat dilaporkan dalam bentuk rata-rata dan variasi antar-\textit{run} agar kestabilan kinerja Q-Learning dan DQN dapat dibandingkan dengan lebih memadai. Evaluasi pada episode atau kumpulan aksi yang tidak digunakan selama pelatihan juga diperlukan untuk mengukur kemampuan generalisasi.
+
+    \item Pengujian dapat diperluas ke aplikasi web lain, lebih banyak \textit{endpoint}, dan variasi teknologi di sisi server. Perluasan ini dapat membantu menilai apakah sistem mampu beradaptasi pada lingkungan yang karakteristiknya berbeda dari OWASP Juice Shop.
+
+    \item Penyusunan \textit{ground truth} sebaiknya diperkuat melalui pemeriksaan independen dan dokumentasi bukti untuk setiap aksi. Aksi berlabel \textit{unknown} perlu tetap dipisahkan dari aksi negatif, atau diperiksa lebih lanjut, agar evaluasi tidak menganggap aksi yang belum diketahui sebagai aksi yang aman.
+
+    \item Perbandingan dengan OWASP ZAP dapat dikembangkan dengan menyamakan cakupan target, definisi temuan, dan aturan penghitungan permintaan sejauh memungkinkan. Aktivitas seperti akses URL, \textit{spider}, dan pemindaian aktif sebaiknya dicatat secara terpisah agar batas perbandingan dapat dijelaskan dengan lebih terukur.
+
+    \item Pengembangan berikutnya dapat menguji pengaruh variasi \textit{hyperparameter} dan fungsi \textit{reward} terhadap pola eksplorasi, jumlah temuan terverifikasi, serta jumlah permintaan yang diperlukan. Evaluasi sebaiknya tidak hanya mengandalkan \textit{cumulative reward}, tetapi juga melaporkan temuan terverifikasi dan efisiensi permintaan secara bersamaan.
+
+    \item Untuk penerapan di luar lingkungan lokal penelitian, pengujian perlu dilakukan hanya pada sistem yang telah mendapat izin. Penggunaan pembatasan laju permintaan, pencatatan aktivitas, dan lingkungan uji terisolasi dapat membantu menjaga agar proses evaluasi tetap terkendali.
+\end{enumerate}

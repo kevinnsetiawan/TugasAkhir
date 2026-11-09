@@ -1,0 +1,254 @@
+Error: SQLITE_ERROR: incomplete input
+Error: SQLITE_ERROR: near "UNION": syntax error
+Error: SQLITE_ERROR: incomplete input
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+Error: Only .md and .pdf files are allowed!
+    at verify (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:68:18)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\fileServer.js:52:13
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:376:14)
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:421:3)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:139:16
+    at FSReqCallback.oncomplete (node:fs:197:21)
+BadRequestError: Bad Request
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\serve-index\index.js:124:42
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at serveIndexMiddleware (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\server.js:280:9)
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\lib\antiCheat.js:100:5
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+SyntaxError: Unexpected identifier 'OR'
+    at Function (<anonymous>)
+    at Object.$where (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:419:23)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:211:46
+    at fastForEachObject (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\object\forEach.js:21:5)
+    at fastForEach (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\forEach.js:20:12)
+    at compileDocumentSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:203:25)
+    at DocumentMatcher._compileSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:153:14)
+    at new DocumentMatcher (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:103:29)
+    at CursorObservable._ensureMatcherSorter (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:265:23)
+    at CursorObservable.Cursor (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:116:12)
+    at new CursorObservable (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CursorObservable.js:67:90)
+    at CollectionDelegate.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CollectionDelegate.js:117:14)
+    at Collection.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Collection.js:275:28)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\trackOrder.js:50:29
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\route.js:149:13)
+SyntaxError: Invalid left-hand side expression in postfix operation
+    at Function (<anonymous>)
+    at Object.$where (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:419:23)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:211:46
+    at fastForEachObject (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\object\forEach.js:21:5)
+    at fastForEach (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\forEach.js:20:12)
+    at compileDocumentSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:203:25)
+    at DocumentMatcher._compileSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:153:14)
+    at new DocumentMatcher (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:103:29)
+    at CursorObservable._ensureMatcherSorter (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:265:23)
+    at CursorObservable.Cursor (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:116:12)
+    at new CursorObservable (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CursorObservable.js:67:90)
+    at CollectionDelegate.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CollectionDelegate.js:117:14)
+    at Collection.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Collection.js:275:28)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\trackOrder.js:50:29
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\route.js:149:13)
+SyntaxError: Unexpected identifier 'UNION'
+    at Function (<anonymous>)
+    at Object.$where (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:419:23)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:211:46
+    at fastForEachObject (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\object\forEach.js:21:5)
+    at fastForEach (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\forEach.js:20:12)
+    at compileDocumentSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:203:25)
+    at DocumentMatcher._compileSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:153:14)
+    at new DocumentMatcher (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:103:29)
+    at CursorObservable._ensureMatcherSorter (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:265:23)
+    at CursorObservable.Cursor (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:116:12)
+    at new CursorObservable (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CursorObservable.js:67:90)
+    at CollectionDelegate.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CollectionDelegate.js:117:14)
+    at Collection.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Collection.js:275:28)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\trackOrder.js:50:29
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\route.js:149:13)
+SyntaxError: Unexpected identifier 'OR'
+    at Function (<anonymous>)
+    at Object.$where (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:419:23)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:211:46
+    at fastForEachObject (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\object\forEach.js:21:5)
+    at fastForEach (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\forEach.js:20:12)
+    at compileDocumentSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:203:25)
+    at DocumentMatcher._compileSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:153:14)
+    at new DocumentMatcher (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:103:29)
+    at CursorObservable._ensureMatcherSorter (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:265:23)
+    at CursorObservable.Cursor (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:116:12)
+    at new CursorObservable (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CursorObservable.js:67:90)
+    at CollectionDelegate.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CollectionDelegate.js:117:14)
+    at Collection.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Collection.js:275:28)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\trackOrder.js:50:29
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\route.js:149:13)
+SyntaxError: Unexpected identifier 'OR'
+    at Function (<anonymous>)
+    at Object.$where (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:419:23)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:211:46
+    at fastForEachObject (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\object\forEach.js:21:5)
+    at fastForEach (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\forEach.js:20:12)
+    at compileDocumentSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:203:25)
+    at DocumentMatcher._compileSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:153:14)
+    at new DocumentMatcher (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:103:29)
+    at CursorObservable._ensureMatcherSorter (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:265:23)
+    at CursorObservable.Cursor (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:116:12)
+    at new CursorObservable (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CursorObservable.js:67:90)
+    at CollectionDelegate.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CollectionDelegate.js:117:14)
+    at Collection.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Collection.js:275:28)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\trackOrder.js:50:29
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\route.js:149:13)
+Error: Unexpected path: /rest/track-order/%3Cscript%3Ealert(document.domain)%3C/script%3E
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\angular.js:18:18
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\lib\utils.js:235:26
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\verify.js:235:5
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:286:9
+    at router.process_params (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:280:10)
+    at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\lib\insecurity.js:218:5
+    at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\index.js:328:13)

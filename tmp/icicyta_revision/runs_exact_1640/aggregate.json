@@ -1,0 +1,540 @@
+{
+  "suite": "detector_blind_oracle_exact_target_request_budget_v2",
+  "run_count": 26,
+  "request_budget_per_run": 1640,
+  "all_runs_exact": true,
+  "runs_with_over_budget_rejections": 5,
+  "methods": {
+    "ql": {
+      "n": 5,
+      "verified_action_count": {
+        "mean": 11.4,
+        "sd": 1.52,
+        "min": 10,
+        "max": 13
+      },
+      "oracle_true_positive_count": {
+        "mean": 10.8,
+        "sd": 1.3,
+        "min": 9,
+        "max": 12
+      },
+      "oracle_false_positive_count": {
+        "mean": 0.6,
+        "sd": 0.55,
+        "min": 0,
+        "max": 1
+      },
+      "verified_unknown_count": {
+        "mean": 0,
+        "sd": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "oracle_missed_positive_count": {
+        "mean": 2.2,
+        "sd": 1.3,
+        "min": 1,
+        "max": 4
+      },
+      "full_oracle_coverage_runs": 0,
+      "full_oracle_coverage_episode": null,
+      "primary_episodes": {
+        "mean": 865,
+        "sd": 140.42,
+        "min": 652,
+        "max": 1008
+      },
+      "unique_actions_visited": {
+        "mean": 71.4,
+        "sd": 9.84,
+        "min": 63,
+        "max": 83
+      },
+      "full_action_space_enumeration_runs": 0,
+      "mean_duration_seconds": 134.74,
+      "all_requests_exact": true,
+      "false_positive_action_sets": [
+        [
+          53
+        ],
+        [],
+        [
+          53
+        ],
+        [
+          53
+        ],
+        []
+      ],
+      "verified_unknown_action_sets": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "missed_positive_action_sets": [
+        [
+          26
+        ],
+        [
+          26,
+          51
+        ],
+        [
+          25,
+          26,
+          54,
+          65
+        ],
+        [
+          51
+        ],
+        [
+          6,
+          26,
+          27
+        ]
+      ]
+    },
+    "random": {
+      "n": 5,
+      "verified_action_count": {
+        "mean": 14,
+        "sd": 0.0,
+        "min": 14,
+        "max": 14
+      },
+      "oracle_true_positive_count": {
+        "mean": 13,
+        "sd": 0.0,
+        "min": 13,
+        "max": 13
+      },
+      "oracle_false_positive_count": {
+        "mean": 1,
+        "sd": 0.0,
+        "min": 1,
+        "max": 1
+      },
+      "verified_unknown_count": {
+        "mean": 0,
+        "sd": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "oracle_missed_positive_count": {
+        "mean": 0,
+        "sd": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "full_oracle_coverage_runs": 5,
+      "full_oracle_coverage_episode": {
+        "mean": 308.4,
+        "sd": 87.99,
+        "min": 217,
+        "max": 440
+      },
+      "primary_episodes": {
+        "mean": 569.6,
+        "sd": 7.16,
+        "min": 562,
+        "max": 581
+      },
+      "unique_actions_visited": {
+        "mean": 119.2,
+        "sd": 0.45,
+        "min": 119,
+        "max": 120
+      },
+      "full_action_space_enumeration_runs": 1,
+      "mean_duration_seconds": 297.44,
+      "all_requests_exact": true,
+      "false_positive_action_sets": [
+        [
+          53
+        ],
+        [
+          53
+        ],
+        [
+          53
+        ],
+        [
+          53
+        ],
+        [
+          53
+        ]
+      ],
+      "verified_unknown_action_sets": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "missed_positive_action_sets": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    "fixed": {
+      "n": 5,
+      "verified_action_count": {
+        "mean": 14,
+        "sd": 0.0,
+        "min": 14,
+        "max": 14
+      },
+      "oracle_true_positive_count": {
+        "mean": 13,
+        "sd": 0.0,
+        "min": 13,
+        "max": 13
+      },
+      "oracle_false_positive_count": {
+        "mean": 1,
+        "sd": 0.0,
+        "min": 1,
+        "max": 1
+      },
+      "verified_unknown_count": {
+        "mean": 0,
+        "sd": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "oracle_missed_positive_count": {
+        "mean": 0,
+        "sd": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "full_oracle_coverage_runs": 5,
+      "full_oracle_coverage_episode": {
+        "mean": 66,
+        "sd": 0.0,
+        "min": 66,
+        "max": 66
+      },
+      "primary_episodes": {
+        "mean": 584.8,
+        "sd": 0.84,
+        "min": 584,
+        "max": 586
+      },
+      "unique_actions_visited": {
+        "mean": 120,
+        "sd": 0.0,
+        "min": 120,
+        "max": 120
+      },
+      "full_action_space_enumeration_runs": 5,
+      "mean_duration_seconds": 126.44,
+      "all_requests_exact": true,
+      "false_positive_action_sets": [
+        [
+          53
+        ],
+        [
+          53
+        ],
+        [
+          53
+        ],
+        [
+          53
+        ],
+        [
+          53
+        ]
+      ],
+      "verified_unknown_action_sets": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "missed_positive_action_sets": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    "ql_no_verify_reward": {
+      "n": 5,
+      "verified_action_count": {
+        "mean": 11.8,
+        "sd": 1.3,
+        "min": 10,
+        "max": 13
+      },
+      "oracle_true_positive_count": {
+        "mean": 11.2,
+        "sd": 0.84,
+        "min": 10,
+        "max": 12
+      },
+      "oracle_false_positive_count": {
+        "mean": 0.6,
+        "sd": 0.55,
+        "min": 0,
+        "max": 1
+      },
+      "verified_unknown_count": {
+        "mean": 0,
+        "sd": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "oracle_missed_positive_count": {
+        "mean": 1.8,
+        "sd": 0.84,
+        "min": 1,
+        "max": 3
+      },
+      "full_oracle_coverage_runs": 0,
+      "full_oracle_coverage_episode": null,
+      "primary_episodes": {
+        "mean": 851.4,
+        "sd": 106.42,
+        "min": 740,
+        "max": 1008
+      },
+      "unique_actions_visited": {
+        "mean": 75,
+        "sd": 9.14,
+        "min": 63,
+        "max": 85
+      },
+      "full_action_space_enumeration_runs": 0,
+      "mean_duration_seconds": 103.77,
+      "all_requests_exact": true,
+      "false_positive_action_sets": [
+        [
+          53
+        ],
+        [],
+        [
+          53
+        ],
+        [
+          53
+        ],
+        []
+      ],
+      "verified_unknown_action_sets": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "missed_positive_action_sets": [
+        [
+          25,
+          51
+        ],
+        [
+          26,
+          51
+        ],
+        [
+          51
+        ],
+        [
+          51
+        ],
+        [
+          6,
+          26,
+          27
+        ]
+      ]
+    },
+    "ql_reward_low": {
+      "n": 3,
+      "verified_action_count": {
+        "mean": 11.33,
+        "sd": 1.53,
+        "min": 10,
+        "max": 13
+      },
+      "oracle_true_positive_count": {
+        "mean": 10.67,
+        "sd": 1.53,
+        "min": 9,
+        "max": 12
+      },
+      "oracle_false_positive_count": {
+        "mean": 0.67,
+        "sd": 0.58,
+        "min": 0,
+        "max": 1
+      },
+      "verified_unknown_count": {
+        "mean": 0,
+        "sd": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "oracle_missed_positive_count": {
+        "mean": 2.33,
+        "sd": 1.53,
+        "min": 1,
+        "max": 4
+      },
+      "full_oracle_coverage_runs": 0,
+      "full_oracle_coverage_episode": null,
+      "primary_episodes": {
+        "mean": 803.33,
+        "sd": 134.93,
+        "min": 649,
+        "max": 899
+      },
+      "unique_actions_visited": {
+        "mean": 71.67,
+        "sd": 10.26,
+        "min": 63,
+        "max": 83
+      },
+      "full_action_space_enumeration_runs": 0,
+      "mean_duration_seconds": 110.01,
+      "all_requests_exact": true,
+      "false_positive_action_sets": [
+        [
+          53
+        ],
+        [],
+        [
+          53
+        ]
+      ],
+      "verified_unknown_action_sets": [
+        [],
+        [],
+        []
+      ],
+      "missed_positive_action_sets": [
+        [
+          26
+        ],
+        [
+          26,
+          51
+        ],
+        [
+          25,
+          26,
+          54,
+          65
+        ]
+      ]
+    },
+    "ql_reward_high": {
+      "n": 3,
+      "verified_action_count": {
+        "mean": 11.33,
+        "sd": 1.53,
+        "min": 10,
+        "max": 13
+      },
+      "oracle_true_positive_count": {
+        "mean": 10.67,
+        "sd": 1.53,
+        "min": 9,
+        "max": 12
+      },
+      "oracle_false_positive_count": {
+        "mean": 0.67,
+        "sd": 0.58,
+        "min": 0,
+        "max": 1
+      },
+      "verified_unknown_count": {
+        "mean": 0,
+        "sd": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "oracle_missed_positive_count": {
+        "mean": 2.33,
+        "sd": 1.53,
+        "min": 1,
+        "max": 4
+      },
+      "full_oracle_coverage_runs": 0,
+      "full_oracle_coverage_episode": null,
+      "primary_episodes": {
+        "mean": 803.67,
+        "sd": 134.36,
+        "min": 650,
+        "max": 899
+      },
+      "unique_actions_visited": {
+        "mean": 71.67,
+        "sd": 10.26,
+        "min": 63,
+        "max": 83
+      },
+      "full_action_space_enumeration_runs": 0,
+      "mean_duration_seconds": 112.63,
+      "all_requests_exact": true,
+      "false_positive_action_sets": [
+        [
+          53
+        ],
+        [],
+        [
+          53
+        ]
+      ],
+      "verified_unknown_action_sets": [
+        [],
+        [],
+        []
+      ],
+      "missed_positive_action_sets": [
+        [
+          26
+        ],
+        [
+          26,
+          51
+        ],
+        [
+          25,
+          26,
+          54,
+          65
+        ]
+      ]
+    }
+  },
+  "independent_oracle_detector_rescore": {
+    "detector_prediction_source": "rl_pentest/results/detector_benchmark.json; predictions rescored without using its old confusion matrix",
+    "ground_truth_audit_id": "official_challenge_and_direct_effect_v2",
+    "positive": 13,
+    "negative": 69,
+    "unknown_excluded": 38,
+    "confusion": {
+      "tp": 13,
+      "fp": 0,
+      "fn": 0,
+      "tn": 69,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "caveat": "Detector-blind direct evidence was used for the author-run audit, but there was no external second reviewer; report consistency with this curated set, not independent accuracy or generalization."
+  }
+}

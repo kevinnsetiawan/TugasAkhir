@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <meta charset='utf-8'> 
+    <title>SyntaxError: Invalid left-hand side expression in postfix operation</title>
+    <style>* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+}
+
+body {
+  padding: 80px 100px;
+  font: 13px "Helvetica Neue", "Lucida Grande", "Arial";
+  background: #ECE9E9 -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ECE9E9));
+  background: #ECE9E9 -moz-linear-gradient(top, #fff, #ECE9E9);
+  background-repeat: no-repeat;
+  color: #555;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2 {
+  font-size: 22px;
+  color: #343434;
+}
+h1 em, h2 em {
+  padding: 0 5px;
+  font-weight: normal;
+}
+h1 {
+  font-size: 60px;
+}
+h2 {
+  margin-top: 10px;
+}
+ul li {
+  list-style: none;
+}
+#stacktrace {
+  margin-left: 60px;
+}
+</style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <h1>OWASP Juice Shop (Express ^4.22.1)</h1>
+      <h2><em>500</em> SyntaxError: Invalid left-hand side expression in postfix operation</h2>
+      <ul id="stacktrace"><li> &nbsp; &nbsp;at Function (&lt;anonymous&gt;)</li><li> &nbsp; &nbsp;at Object.$where (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:419:23)</li><li> &nbsp; &nbsp;at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:211:46</li><li> &nbsp; &nbsp;at fastForEachObject (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\object\forEach.js:21:5)</li><li> &nbsp; &nbsp;at fastForEach (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\fast.js\forEach.js:20:12)</li><li> &nbsp; &nbsp;at compileDocumentSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:203:25)</li><li> &nbsp; &nbsp;at DocumentMatcher._compileSelector (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:153:14)</li><li> &nbsp; &nbsp;at new DocumentMatcher (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\DocumentMatcher.js:103:29)</li><li> &nbsp; &nbsp;at CursorObservable._ensureMatcherSorter (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:265:23)</li><li> &nbsp; &nbsp;at CursorObservable.Cursor (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Cursor.js:116:12)</li><li> &nbsp; &nbsp;at new CursorObservable (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CursorObservable.js:67:90)</li><li> &nbsp; &nbsp;at CollectionDelegate.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\CollectionDelegate.js:117:14)</li><li> &nbsp; &nbsp;at Collection.find (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\marsdb\dist\Collection.js:275:28)</li><li> &nbsp; &nbsp;at C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\build\routes\trackOrder.js:50:29</li><li> &nbsp; &nbsp;at Layer.handle [as handle_request] (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\layer.js:95:5)</li><li> &nbsp; &nbsp;at next (C:\Users\Kevin Setiawan\OneDrive\Desktop\Tugas Akhir\juice-shop\node_modules\express\lib\router\route.js:149:13)</li></ul>
+    </div>
+  </body>
+</html>
